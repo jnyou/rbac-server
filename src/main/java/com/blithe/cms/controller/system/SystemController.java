@@ -31,4 +31,14 @@ public class SystemController {
         return "index";
     }
 
+
+    /**
+     * main 工作空间页面
+     */
+    @RequestMapping("/main")
+    public String toMain(){
+        return "main";
+    }
+
+
 }
