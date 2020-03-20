@@ -9,6 +9,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * @author 夏小颜
+ */
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class NoticeVo extends Notice {
@@ -20,8 +23,10 @@ public class NoticeVo extends Notice {
 	
 	private Integer page=1;
 	private Integer limit=10;
-	
-	private Integer[] ids;//接收多个ID
+	/**
+	 * 接收多个ID
+	 */
+	private Integer[] ids;
 	
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

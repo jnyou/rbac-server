@@ -40,5 +40,13 @@ public class SystemController {
         return "main";
     }
 
+    /**
+     * 登陆日志信息页
+     */
+    @RequestMapping("/sys/toLogInfoManager")
+    public String toLog(){
+        return "system/logInfo";
+    }
+
 
 }

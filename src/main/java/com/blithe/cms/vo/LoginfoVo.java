@@ -19,8 +19,11 @@ public class LoginfoVo extends Loginfo {
 
 	
 	private Integer page=1;
-	private Integer limit=10;
-	//接收多个ID
+
+	private Integer limit=20;
+	/**
+	 * 接收多个ID
+	 */
 	private Integer[] ids;
 	
 	
