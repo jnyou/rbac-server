@@ -34,5 +34,4 @@ public class Loginfo implements Serializable {
 
     private Date logintime;
 
-
 }

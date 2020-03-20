@@ -37,4 +37,10 @@ public interface Constast {
 	public static final Integer OPEN_TRUE = 1;
 	public static final Integer OPEN_FALSE = 0;
 
+
+	/**
+	 * 固定IP
+	 */
+	public static final String DEL_IP = "0:0:0:0:0:0:0:1";
+
 }
