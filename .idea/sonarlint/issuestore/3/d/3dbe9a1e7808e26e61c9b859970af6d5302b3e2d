@@ -1,0 +1,12 @@
+
+Q	java:S125s"<This block of commented-out lines of code should be removed.(ïúÖŒ
+W	java:S125°"<This block of commented-out lines of code should be removed.(ÔºÞÛýÿÿÿÿ
+P	java:S125v"<This block of commented-out lines of code should be removed.(å¿Í
+u
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(¦¯ª±ùÿÿÿÿ
+o
+java:S2293V"YReplace the type specification in this constructor call with the diamond operator ("<>").(ù³£¨
+V	java:S125g"<This block of commented-out lines of code should be removed.(Õ¦ë£üÿÿÿÿ
+e
+java:S1128
+"ORemove this unused import 'org.springframework.beans.factory.annotation.Value'.(ìø›
