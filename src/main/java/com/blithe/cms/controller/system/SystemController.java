@@ -55,5 +55,12 @@ public class SystemController {
     public String toNoticeManager(){
         return "system/notice";
     }
+    /**
+     * ICON 页面
+     */
+    @RequestMapping("/sys/toIconManager")
+    public String toIconManager(){
+        return "icon";
+    }
 
 }
