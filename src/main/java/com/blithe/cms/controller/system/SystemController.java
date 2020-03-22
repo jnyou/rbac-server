@@ -63,4 +63,31 @@ public class SystemController {
         return "icon";
     }
 
+    /**
+     * 部门管理页面
+     * @return
+     */
+    @RequestMapping("/sys/toDeptManager")
+    public String toDeptManager(){
+        return "system/dept/deptManager";
+    }
+
+    /**
+     * 部门管理left页面
+     * @return
+     */
+    @RequestMapping("/sys/toDeptLeft")
+    public String toDeptLeft(){
+        return "system/dept/deptLeft";
+    }
+
+    /**
+     * 部门管理right页面
+     * @return
+     */
+    @RequestMapping("/sys/toDeptRight")
+    public String toDeptRight(){
+        return "system/dept/deptRight";
+    }
+
 }
