@@ -47,13 +47,13 @@
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">开始时间：</label>
-                    <input type="text" class="layui-input" id="startTime" name="startTime" style="width:140px"
+                    <input type="text" class="layui-input" id="startTime" name="startTime" style="width:150px"
                            placeholder="开始时间" readonly="readonly"/>
                 </div>
 
                 <div class="layui-inline">
                     <label class="layui-form-label">结束时间：</label>
-                    <input type="text" class="layui-input" id="endTime" name="endTime" style="width:140px"
+                    <input type="text" class="layui-input" id="endTime" name="endTime" style="width:150px"
                            placeholder="结束时间" readonly="readonly"/>
                 </div>
 
@@ -129,7 +129,7 @@
                 }
                 , cols: [ [ //表头
                     {type: 'checkbox', fixed: 'left'}
-                    , {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left',}
+                    , {field: 'id', title: 'ID', sort: true, align: 'center',}
                     , {field: 'loginname', title: '登陆名称', align: 'center'}
                     , {field: 'loginip', title: '登陆IP', align: 'center'}
                     , {field: 'logintime', title: '登陆时间', sort: true, align: 'center'}
@@ -211,19 +211,17 @@
     <!--数据表格上部操作开始-->
     <script type="text/html" id="loginfoToolBar">
         <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="logInfoDelBatch"><span
+            <button class="layui-btn  layui-btn-danger" lay-event="logInfoDelBatch"><span
                     class="layui-icon layui-icon-delete">批量删除</span></button>
-            <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-            <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
         </div>
     </script>
     <!--数据表格上部操作结束-->
 
     <!--数据表格右部操作-->
     <script type="text/html" id="logInfoRightBar">
-        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="logInfoDetail">查看</a>
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="logInfoDetail">查看</a>
         <a class="layui-btn layui-btn-xs" lay-event="logInfoEdit">编辑</a>
-        <a class="layui-btn layui-btn-xs" lay-event="logInfoDel">删除</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="logInfoDel">删除</a>
     </script>
 </form>
 

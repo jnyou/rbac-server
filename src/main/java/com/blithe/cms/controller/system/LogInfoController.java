@@ -34,15 +34,14 @@ public class LogInfoController {
     @GetMapping("/list")
     public R queryLogList(LoginfoVo loginfoVo, Map<String,Object> params) {
         LoginfoVo loginfoVoNew = (LoginfoVo)params.get("loginfoVo");
-        Page page = new Page(loginfoVoNew.getPage(),loginfoVoNew.getLimit());
-        EntityWrapper queryWrapper = new EntityWrapper<>();
+        Page page = new Page(loginfoVoNew.getPage(),loginfoVoNew.getLimit(),"logintime",false);
+        EntityWrapper wrapper = new EntityWrapper<>();
         // 条件构造b
-        queryWrapper.like(StringUtils.isNotBlank(loginfoVo.getLoginname()),"loginname",loginfoVo.getLoginname());
-        queryWrapper.like(StringUtils.isNotBlank(loginfoVo.getLoginip()),"loginip",loginfoVo.getLoginip());
-        queryWrapper.ge(loginfoVo.getStartTime()!=null,"logintime",loginfoVo.getStartTime());
-        queryWrapper.le(loginfoVo.getEndTime()!=null,"logintime",loginfoVo.getEndTime());
-        queryWrapper.orderBy("logintime",false);
-        Page pages = this.loginfoService.selectPage(page, queryWrapper);
+        wrapper.like(StringUtils.isNotBlank(loginfoVo.getLoginname()),"loginname",loginfoVo.getLoginname());
+        wrapper.like(StringUtils.isNotBlank(loginfoVo.getLoginip()),"loginip",loginfoVo.getLoginip());
+        wrapper.ge(loginfoVo.getStartTime()!=null,"logintime",loginfoVo.getStartTime());
+        wrapper.le(loginfoVo.getEndTime()!=null,"logintime",loginfoVo.getEndTime());
+        Page pages = this.loginfoService.selectPage(page, wrapper);
         return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
     }
 

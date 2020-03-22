@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @ClassName LoginController
- * @Description: 跳转页面
+ * @ClassName: SystemController
+ * @Description: 跳转Controller
  * @Author: 夏小颜
  * @Date: 9:59
  * @Version: 1.0
@@ -44,9 +44,16 @@ public class SystemController {
      * 登陆日志信息页
      */
     @RequestMapping("/sys/toLogInfoManager")
-    public String toLog(){
+    public String toLogInfoManager(){
         return "system/logInfo";
     }
 
+    /**
+     * 系统公告页
+     */
+    @RequestMapping("/sys/toNoticeManager")
+    public String toNoticeManager(){
+        return "system/notice";
+    }
 
 }

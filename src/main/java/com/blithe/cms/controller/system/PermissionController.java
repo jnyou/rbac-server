@@ -6,15 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p>
- *  前端控制器
- * </p>
- *
- * @author 老雷
- * @since 2019-09-21
- */
+ * @Author: youjiannan
+ * @Description:
+ * @Date: 2020/3/21
+ * @Param:
+ * @Return:
+ **/
 @RestController
-@RequestMapping("/sys/permission")
+@RequestMapping("/permission")
 public class PermissionController {
 
 }

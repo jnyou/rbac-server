@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 
 /**
  * @Author: youjiannan
- * @Description:
+ * @Description: 登陆信息模块
  * @Date: 2020/3/19
  * @Param:
  * @Return:

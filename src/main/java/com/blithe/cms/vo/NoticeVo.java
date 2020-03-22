@@ -22,7 +22,7 @@ public class NoticeVo extends Notice {
 
 	
 	private Integer page=1;
-	private Integer limit=10;
+	private Integer limit=20;
 	/**
 	 * 接收多个ID
 	 */

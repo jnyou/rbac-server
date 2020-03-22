@@ -6,7 +6,7 @@ import com.blithe.cms.pojo.system.Notice;
 
 /**
  * @Author: youjiannan
- * @Description:
+ * @Description: 系统公告模块
  * @Date: 2020/3/19
  * @Param:
  * @Return:
