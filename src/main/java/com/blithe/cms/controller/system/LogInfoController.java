@@ -3,8 +3,8 @@ package com.blithe.cms.controller.system;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.blithe.cms.common.exception.R;
+import com.blithe.cms.pojo.system.Loginfo;
 import com.blithe.cms.service.LoginfoService;
-import com.blithe.cms.vo.LoginfoVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +32,15 @@ public class LogInfoController {
      * @return
      */
     @GetMapping("/list")
-    public R queryLogList(LoginfoVo loginfoVo, Map<String,Object> params) {
-        LoginfoVo loginfoVoNew = (LoginfoVo)params.get("loginfoVo");
-        Page page = new Page(loginfoVoNew.getPage(),loginfoVoNew.getLimit(),"logintime",false);
+    public R queryLogList(Loginfo loginfo, Map<String,Object> params) {
+        Loginfo loginfoNew = (Loginfo)params.get("loginfo");
+        Page page = new Page(loginfoNew.getPage(),loginfoNew.getLimit(),"logintime",false);
         EntityWrapper wrapper = new EntityWrapper<>();
         // 条件构造b
-        wrapper.like(StringUtils.isNotBlank(loginfoVo.getLoginname()),"loginname",loginfoVo.getLoginname());
-        wrapper.like(StringUtils.isNotBlank(loginfoVo.getLoginip()),"loginip",loginfoVo.getLoginip());
-        wrapper.ge(loginfoVo.getStartTime()!=null,"logintime",loginfoVo.getStartTime());
-        wrapper.le(loginfoVo.getEndTime()!=null,"logintime",loginfoVo.getEndTime());
+        wrapper.like(StringUtils.isNotBlank(loginfo.getLoginname()),"loginname",loginfo.getLoginname());
+        wrapper.like(StringUtils.isNotBlank(loginfo.getLoginip()),"loginip",loginfo.getLoginip());
+        wrapper.ge(loginfo.getStartTime()!=null,"logintime",loginfo.getStartTime());
+        wrapper.le(loginfo.getEndTime()!=null,"logintime",loginfo.getEndTime());
         Page pages = this.loginfoService.selectPage(page, wrapper);
         return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
     }

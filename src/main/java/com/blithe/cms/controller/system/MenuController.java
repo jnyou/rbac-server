@@ -9,7 +9,6 @@ import com.blithe.cms.common.tools.*;
 import com.blithe.cms.pojo.system.Permission;
 import com.blithe.cms.pojo.system.SysUser;
 import com.blithe.cms.service.PermissionService;
-import com.blithe.cms.vo.PermissionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +30,7 @@ public class MenuController {
 	
 	
 	@RequestMapping("/loadIndexLeftMenuJson")
-	public DataGridView loadIndexLeftMenuJson(PermissionVo permissionVo) {
+	public DataGridView loadIndexLeftMenuJson(Permission permission) {
 		//查询所有菜单
 		EntityWrapper<Permission> queryWrapper=new EntityWrapper<>();
 		//设置只能查询菜单

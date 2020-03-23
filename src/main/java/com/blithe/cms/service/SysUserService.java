@@ -12,11 +12,4 @@ import com.blithe.cms.pojo.system.SysUser;
  */
 public interface SysUserService extends IService<SysUser> {
 
-    /**
-     * 登陆
-     * @param loginname
-     * @param pwd
-     * @return
-     */
-    SysUser queryNameAndcode(String loginname,String pwd);
 }

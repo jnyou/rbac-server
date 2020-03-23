@@ -1,11 +1,9 @@
 package com.blithe.cms.pojo.system;
 
-import java.io.Serializable;
-
-
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.blithe.cms.common.base.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -18,10 +16,8 @@ import lombok.experimental.Accessors;
  * @Return:
  **/
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
 @TableName("sys_permission")
-public class Permission implements Serializable {
+public class Permission extends BaseVO {
 
     private static final long serialVersionUID=1L;
 

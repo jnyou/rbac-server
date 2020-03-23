@@ -6,6 +6,7 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.blithe.cms.common.base.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -18,10 +19,8 @@ import lombok.experimental.Accessors;
  * @Return:
  **/
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
 @TableName("sys_loginfo")
-public class Loginfo implements Serializable {
+public class Loginfo extends BaseVO {
 
     private static final long serialVersionUID=1L;
 

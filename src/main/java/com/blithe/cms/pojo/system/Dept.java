@@ -1,12 +1,11 @@
 package com.blithe.cms.pojo.system;
 
-import java.io.Serializable;
 import java.util.Date;
-
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.blithe.cms.common.base.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -17,10 +16,8 @@ import lombok.experimental.Accessors;
  * @author 夏小颜
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
 @TableName("sys_dept")
-public class Dept implements Serializable {
+public class Dept extends BaseVO {
 
     private static final long serialVersionUID=1L;
 

@@ -1,15 +1,18 @@
 package com.blithe.cms.pojo.system;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.blithe.cms.common.base.BaseVO;
 import lombok.Data;
 
 /**
- * sys_user
- * @author 
+ * 用户管理
+ * @author 夏小颜
  */
 @Data
-public class SysUser implements Serializable {
+@TableName("sys_user")
+public class SysUser extends BaseVO {
     private Integer id;
 
     private String name;

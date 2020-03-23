@@ -7,7 +7,6 @@ import com.blithe.cms.common.tools.HttpContextUtils;
 import com.blithe.cms.pojo.system.Notice;
 import com.blithe.cms.pojo.system.SysUser;
 import com.blithe.cms.service.NoticeService;
-import com.blithe.cms.vo.NoticeVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,14 +30,14 @@ public class NoticeController {
     private NoticeService noticeService;
 
     @GetMapping("/list")
-    public R queryNoticeList(NoticeVo noticeVo, Map<String,Object> params){
-        NoticeVo noticeVoNew = (NoticeVo)params.get("noticeVo");
-        Page<Notice> page = new Page<Notice>(noticeVoNew.getPage(),noticeVoNew.getLimit(),"createtime",false);
+    public R queryNoticeList(Notice notice, Map<String,Object> params){
+        Notice noticeNew = (Notice)params.get("notice");
+        Page<Notice> page = new Page<Notice>(noticeNew.getPage(),noticeNew.getLimit(),"createtime",false);
         EntityWrapper wrapper = new EntityWrapper();
-        wrapper.like(StringUtils.isNotBlank(noticeVo.getTitle()),"title",noticeVo.getTitle());
-        wrapper.like(StringUtils.isNotBlank(noticeVo.getOpername()),"opername",noticeVo.getOpername());
-        wrapper.ge(noticeVo.getStartTime()!=null,"createtime",noticeVo.getStartTime());
-        wrapper.le(noticeVo.getEndTime()!=null,"createtime",noticeVo.getEndTime());
+        wrapper.like(StringUtils.isNotBlank(notice.getTitle()),"title",notice.getTitle());
+        wrapper.like(StringUtils.isNotBlank(notice.getOpername()),"opername",notice.getOpername());
+        wrapper.ge(notice.getStartTime()!=null,"createtime",notice.getStartTime());
+        wrapper.le(notice.getEndTime()!=null,"createtime",notice.getEndTime());
         Page pages = noticeService.selectPage(page, wrapper);
         return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
     }

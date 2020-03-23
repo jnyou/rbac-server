@@ -17,13 +17,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
-    @Autowired
-    private SysUserMapper sysUserMapper;
 
-    @Override
-    public SysUser queryNameAndcode(String loginname, String pwd) {
-        // 逻辑判断
-        return sysUserMapper.queryNameAndcode(loginname, MD5.md5(MD5.md5(pwd)));
-
-    }
 }
