@@ -42,7 +42,7 @@ layui.extend({
     // 绑定节点点击
     dtree.on("node(deptTree)" ,function(obj){
      // layer.msg(JSON.stringify(obj.param));
-      window.parent.right.reloadTable(obj.param.nodeId);
+      window.parent.right.reloadTable(obj.param.nodeId); // 传入ID或者PID给right页面
     });
   });
 

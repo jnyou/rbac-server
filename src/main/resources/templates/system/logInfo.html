@@ -74,154 +74,158 @@
 
     <!-- 数据表格开始 -->
     <div>
+        <!-- 数据表格内容主体开始 -->
         <table class="layui-hide" id="loginfoTable" lay-filter="loginfoTable"></table>
-    </div>
-    <!-- 数据表格结束 -->
+        <!-- 数据表格内容主体结束 -->
 
-    <script src="/layui/layui.js"></script>
-
-    <script>
-        layui.use(['jquery', 'table', 'laydate', 'layer', 'form'], function () {
-            var $ = layui.jquery;
-            var form = layui.form;
-            var table = layui.table;
-            var layer = layui.layer;
-            var laydate = layui.laydate;
-            var index = layui.layer.msg('查询中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
-            // 初始化日期组件
-            laydate.render({
-                elem: "#startTime",
-                type: "datetime"
-            })
-            laydate.render({
-                elem: "#endTime",
-                type: "datetime"
-            })
-
-            // 初始化数据表格
-            var tableIns = table.render({
-                elem: '#loginfoTable'
-                , height: "full-120"
-                , toolbar: '#loginfoToolBar' //开启头部工具栏，并为其绑定左侧模板
-                , url: '/log/list' //数据接口
-                , title: '登陆信息表'
-                , page: true //开启分页
-                , limit: 20
-                , done: function (res, currPage, count) {//数据渲染完的回调
-                    layui.layer.close(index);
-                    console.log(res);
-
-                    //得到当前页码
-                    console.log(currPage);
-
-                    //得到数据总量
-                    console.log(count);
-                    if (res.data.length == 0 && currPage != 0) {
-                        // 执行重载函数
-                        // 页码
-                        // curr - 1
-                        tableIns.reload({
-                            page: {
-                                curr: currPage - 1
-                            }
-                        })
-                    }
-                }
-                , cols: [ [ //表头
-                    {type: 'checkbox', fixed: 'left'}
-                    , {field: 'id', title: 'ID', sort: true, align: 'center',}
-                    , {field: 'loginname', title: '登陆名称', align: 'center'}
-                    , {field: 'loginip', title: '登陆IP', align: 'center'}
-                    , {field: 'logintime', title: '登陆时间', sort: true, align: 'center'}
-                    , {fixed: 'right', title: '操作', align: 'center', toolbar: '#logInfoRightBar'} //右部工具栏，并为其绑定右侧模板
-                ] ]
-            })
-            // 模糊查询条件
-            form.on("submit(doSearch)", function (data) {
-                index = layui.layer.msg('查询中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
-                tableIns.reload({
-                    where: data.field,
-                    page: {
-                        curr: 1
-                    }
-                });
-                return false;
-            });
-
-            // 监听行删除事件
-            table.on('tool(loginfoTable)', function (obj) {
-                var layEvent = obj.event, data = obj.data;
-                var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
-                if (layEvent === 'logInfoDel') {
-                    var arr = [];
-                    var object = {"id": data.id};
-                    arr.push(object);
-                    deleteBatch(arr);
-                }
-            });
-            // 监听头批量删除事件
-            table.on('toolbar(loginfoTable)', function (obj) {
-                var checkStatus = table.checkStatus(obj.config.id);
-                var layEvent = obj.event, data = obj.data;
-                if (layEvent === 'logInfoDelBatch') {
-                    var checkId = [];
-                    var chechData = checkStatus.data;
-                    if (chechData.length > 0) {
-                        for (var i = 0; i < chechData.length; i++) {
-                            var idObj = {"id": chechData[i].id};
-                            checkId.push(idObj);
-                        }
-                    }
-                    deleteBatch(checkId);
-                }
-            })
-
-            // 删除/批量删除方法
-            function deleteBatch(idArray) {
-                if (idArray.length == 0) {
-                    layer.msg('请选择要删除的数据！', {icon: 2});
-                    return false;
-                }
-                //encodeURIComponent()
-                layer.confirm('是否确认删除？', {
-                    icon: 3, title: '提示信息', btn: ['确认', '取消'], btn1: function () {
-                        var data = JSON.stringify(idArray);
-                        $.ajax({
-                            type: 'post',
-                            url: '/log/deleteBatch',
-                            contentType: "application/json",
-                            data: data,
-                            dataType: "json",
-                            success: function (result) {
-                                if (result.code != 0) {
-                                    resultLayerMsg(result)
-                                    return false;
-                                } else {
-                                    layer.msg('已删除！', {icon: 1});
-                                    //不刷新页面 留在当前
-                                    tableIns.reload();
-                                }
-                            }
-                        });
-                    }
-                })
-            }
-        })
-    </script>
-    <!--数据表格上部操作开始-->
-    <script type="text/html" id="loginfoToolBar">
-        <div class="layui-btn-container">
+        <!--数据表格上部操作开始-->
+        <div id="loginfoToolBar" style="display: none;">
             <button class="layui-btn  layui-btn-danger" lay-event="logInfoDelBatch"><span
                     class="layui-icon layui-icon-delete">批量删除</span></button>
         </div>
-    </script>
-    <!--数据表格上部操作结束-->
+        <!--数据表格上部操作结束-->
 
-    <!--数据表格右部操作-->
-    <script type="text/html" id="logInfoRightBar">
-        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="logInfoDel"><span class="layui-icon layui-icon-delete"></span>删除</a>
-    </script>
+        <!--数据表格右部操作-->
+        <div id="logInfoRightBar" style="display: none;">
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="logInfoDel"><span
+                    class="layui-icon layui-icon-delete"></span>删除</a>
+        </div>
+
+    </div>
+    <!-- 数据表格结束 -->
+
 </form>
+
+<!-- JS部分 -->
+<script type="text/javascript" src="/layui/layui.js"></script>
+<script>
+    layui.use(['jquery', 'table', 'laydate', 'layer', 'form'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var table = layui.table;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var index = layui.layer.msg('查询中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
+        // 初始化日期组件
+        laydate.render({
+            elem: "#startTime",
+            type: "datetime"
+        })
+        laydate.render({
+            elem: "#endTime",
+            type: "datetime"
+        })
+
+        // 初始化数据表格
+        var tableIns = table.render({
+            elem: '#loginfoTable'
+            , height: "full-120"
+            , toolbar: '#loginfoToolBar' //开启头部工具栏，并为其绑定左侧模板
+            , url: '/log/list' //数据接口
+            , title: '登陆信息表'
+            , page: true //开启分页
+            , limit: 20
+            , done: function (res, currPage, count) {//数据渲染完的回调
+                layui.layer.close(index);
+                console.log(res);
+
+                //得到当前页码
+                console.log(currPage);
+
+                //得到数据总量
+                console.log(count);
+                if (res.data.length == 0 && currPage != 0) {
+                    // 执行重载函数
+                    // 页码
+                    // curr - 1
+                    tableIns.reload({
+                        page: {
+                            curr: currPage - 1
+                        }
+                    })
+                }
+            }
+            , cols: [ [ //表头
+                {type: 'checkbox', fixed: 'left'}
+                , {field: 'id', title: 'ID', sort: true, align: 'center',}
+                , {field: 'loginname', title: '登陆名称', align: 'center'}
+                , {field: 'loginip', title: '登陆IP', align: 'center'}
+                , {field: 'logintime', title: '登陆时间', sort: true, align: 'center'}
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#logInfoRightBar'} //右部工具栏，并为其绑定右侧模板
+            ] ]
+        })
+        // 模糊查询条件
+        form.on("submit(doSearch)", function (data) {
+            index = layui.layer.msg('查询中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
+            tableIns.reload({
+                where: data.field,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+
+        // 监听行删除事件
+        table.on('tool(loginfoTable)', function (obj) {
+            var layEvent = obj.event, data = obj.data;
+            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+            if (layEvent === 'logInfoDel') {
+                var arr = [];
+                var object = {"id": data.id};
+                arr.push(object);
+                deleteBatch(arr);
+            }
+        });
+        // 监听头批量删除事件
+        table.on('toolbar(loginfoTable)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            var layEvent = obj.event, data = obj.data;
+            if (layEvent === 'logInfoDelBatch') {
+                var checkId = [];
+                var chechData = checkStatus.data;
+                if (chechData.length > 0) {
+                    for (var i = 0; i < chechData.length; i++) {
+                        var idObj = {"id": chechData[i].id};
+                        checkId.push(idObj);
+                    }
+                }
+                deleteBatch(checkId);
+            }
+        })
+
+        // 删除/批量删除方法
+        function deleteBatch(idArray) {
+            if (idArray.length == 0) {
+                layer.msg('请选择要删除的数据！', {icon: 2});
+                return false;
+            }
+            //encodeURIComponent()
+            layer.confirm('是否确认删除？', {
+                icon: 3, title: '提示信息', btn: ['确认', '取消'], btn1: function () {
+                    var data = JSON.stringify(idArray);
+                    $.ajax({
+                        type: 'post',
+                        url: '/log/deleteBatch',
+                        contentType: "application/json",
+                        data: data,
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.code != 0) {
+                                resultLayerMsg(result)
+                                return false;
+                            } else {
+                                layer.msg('已删除！', {icon: 1});
+                                //不刷新页面 留在当前
+                                tableIns.reload();
+                            }
+                        }
+                    });
+                }
+            })
+        }
+    })
+</script>
 
 </body>
 </html>

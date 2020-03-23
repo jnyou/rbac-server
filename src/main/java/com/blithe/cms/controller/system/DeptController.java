@@ -1,16 +1,19 @@
 package com.blithe.cms.controller.system;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.blithe.cms.common.exception.R;
 import com.blithe.cms.common.tools.DataGridView;
 import com.blithe.cms.common.tools.TreeNode;
 import com.blithe.cms.pojo.system.Dept;
 import com.blithe.cms.service.DeptService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ClassName DeptController
@@ -30,7 +33,7 @@ public class DeptController {
      * 加载部门管理dtree JSON数据
      * @return
      */
-    @RequestMapping("/loadDeptLeftDtreeJson")
+    @PostMapping("/loadDeptLeftDtreeJson")
     public DataGridView loadDeptLeftDtreeJson(){
 
         List<Dept> deptList = this.deptService.selectList(new EntityWrapper<>());
@@ -41,6 +44,86 @@ public class DeptController {
         }
         return new DataGridView(treeNodes);
     }
-    
-    
+
+
+    /**
+     *  查询部门
+     * @param dept
+     * @param params
+     * @return
+     */
+    @GetMapping("/list")
+    public R queryDeptList(Dept dept, Map<String,Object> params){
+
+        Dept deptNew = (Dept)params.get("dept");
+        Page page = new Page<>(deptNew.getPage(),deptNew.getLimit(),"ordernum",true);
+        Wrapper wrapper = new EntityWrapper();
+        wrapper.like(StringUtils.isNotBlank(dept.getTitle()),"title",dept.getTitle());
+        wrapper.like(StringUtils.isNotBlank(dept.getAddress()),"address",dept.getAddress());
+        wrapper.ge(dept.getStartTime()!=null,"createtime",dept.getStartTime());
+        wrapper.le(dept.getEndTime()!=null,"createtime",dept.getEndTime());
+
+        // 接受前台left参数进行渲染数据表格
+        wrapper.eq(dept.getId()!=null,"id",dept.getId()).or().eq(dept.getId()!=null,"pid",dept.getId());
+        Page pages = this.deptService.selectPage(page, wrapper);
+
+        return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
+
+    }
+
+
+    @PostMapping("/checkDeptChildrenDel")
+    public R checkDeptChildrenDel(@RequestBody String id){
+        try {
+            EntityWrapper wrapper = new EntityWrapper();
+            wrapper.eq("pid",id);
+            List list = this.deptService.selectList(wrapper);
+            if(CollectionUtils.isNotEmpty(list)){
+                return R.ok().put("value",true);
+            }else {
+                this.deptService.deleteById(id);
+            }
+        }catch (Exception e){
+            return R.error(e.getMessage());
+        }
+        return R.ok();
+    }
+
+    /**
+     * 保存
+     * @param dept
+     * @return
+     */
+    @PostMapping("/deptSaveOrUpdate")
+    public R deptSaveOrUpdate(Dept dept){
+        try {
+            if(dept.getId() == null){
+                dept.setCreatetime(new Date());
+                this.deptService.insert(dept);
+            }else{
+                this.deptService.updateById(dept);
+            }
+        }catch (Exception e){
+            return R.error(e.getMessage());
+        }
+        return R.ok();
+    }
+
+    /**
+     * 查询最大顺序码
+     * @return
+     */
+    @GetMapping("/loadDeptMaxOrderNum")
+    public R loadDeptMaxOrderNum(){
+        EntityWrapper wrapper = new EntityWrapper();
+        wrapper.orderBy("ordernum",false).last("LIMIT 1");
+        Dept dept = this.deptService.selectOne(wrapper);
+        if(dept != null && dept.getOrdernum()>0){
+            return R.ok().put("error",true).put("value",dept.getOrdernum() + 1);
+        }else{
+            return R.ok().put("error",false);
+        }
+    }
+
+
 }
