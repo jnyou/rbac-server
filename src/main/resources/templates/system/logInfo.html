@@ -57,13 +57,13 @@
                            placeholder="结束时间" readonly="readonly"/>
                 </div>
 
-                <button type="button" class="layui-btn" lay-submit="" lay-filter="doSearch" style="margin-left: 5px;">
+                <button type="button" class="layui-btn" lay-submit lay-filter="doSearch" style="margin-left: 5px;">
                     <span class="layui-icon layui-icon-search"></span>搜索
                 </button>
                 <button type="reset" class="layui-btn layui-btn-warm">
                     <span class="layui-icon layui-icon-refresh-1">重置</span>
                 </button>
-                <button class="layui-btn layui-btn-normal" id="logInfoExport">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="logInfoExport">
                     <span class="layui-icon layui-icon-export">导出日志信息（按搜索结果）</span>
                 </button>
             </div>
@@ -98,14 +98,25 @@
 
 <!-- JS部分 -->
 <script type="text/javascript" src="/layui/layui.js"></script>
+<!--先加载jquery-->
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<!--再加载插件-->
+<script src="/layui_exts/excel.js"></script>
 <script>
-    layui.use(['jquery', 'table', 'laydate', 'layer', 'form'], function () {
+    // layui.config({//配置并导入excel插件
+    //     base: '/layui_exts/'
+    // }).extend({
+    //     excel: 'excel',
+    // });
+    layui.use(['jquery', 'table', 'laydate', 'layer', 'form','excel'], function () {
         var $ = layui.jquery;
         var form = layui.form;
         var table = layui.table;
         var layer = layui.layer;
         var laydate = layui.laydate;
+        var excel = layui.excel;
         var index = layui.layer.msg('查询中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
+        var exportData = " ";			//定义全局变量
         // 初始化日期组件
         laydate.render({
             elem: "#startTime",
@@ -115,6 +126,7 @@
             elem: "#endTime",
             type: "datetime"
         })
+
 
         // 初始化数据表格
         var tableIns = table.render({
@@ -126,6 +138,7 @@
             , page: true //开启分页
             , limit: 20
             , done: function (res, currPage, count) {//数据渲染完的回调
+                exportData = res.data;
                 layui.layer.close(index);
                 console.log(res);
 
@@ -154,6 +167,67 @@
                 , {fixed: 'right', title: '操作', align: 'center', toolbar: '#logInfoRightBar'} //右部工具栏，并为其绑定右侧模板
             ] ]
         })
+        // 导出
+        form.on("submit(logInfoExport)", function (data) {
+            index = layui.layer.msg('导出中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
+
+            $.ajax({
+                url: '/log/list'
+                , dataType: 'json'
+                , data: data.field
+                , success(res) {
+                    var data = res.data;
+                    console.log(res);
+                    // 重点！！！如果后端给的数据顺序和映射关系不对，请执行梳理函数后导出
+                    data = excel.filterExportData(data, [
+                        'id'
+                        , 'loginname'
+                        , 'loginip'
+                        , 'logintime'
+                    ]);
+                    // // 意思是：默认80，B列宽150
+                    var colConf = excel.makeRowConfig({
+                        'B': 150,
+                        'C': 1500,
+                        'd': 2000
+                    },80);
+                    // 调用设置单元格样式的函数，传入设置的范围，支持回调 S ：代表单元格样式设置
+                    excel.setExportCellStyle(data, 'A1:D10000', {
+                        s: {
+                            fill: {bgColor: {indexed: 64}, fgColor: {rgb: "FF0000"}},
+                            font: {sz: 14, bold: true, color: {rgb: "FFFFFF"}},
+                            alignment: {
+                                horizontal: 'center',
+                                vertical: 'center'
+                            }
+                        }
+                    }, function(cell, newCell, row, config, currentRow, currentCol, fieldKey) {
+                        // 回调参数，cell:原有数据，newCell:根据批量设置规则自动生成的样式，row:所在行数据，config:传入的配置,currentRow:当前行索引,currentCol:当前列索引，fieldKey:当前字段索引
+                        return ((currentRow + currentCol) % 2 === 0) ? newCell : cell;// 隔行隔列上色
+                    } );
+                    // 重点2！！！一般都需要加一个表头，表头的键名顺序需要与最终导出的数据一致
+                    data.unshift({id: "登陆ID", loginname: "登陆名称", loginip: '登陆IP', logintime: "登陆时间"});
+
+                    var timestart = Date.now();
+                    LAY_EXCEL.exportExcel({
+                        sheet1: data
+                    }, '登陆信息记录'+ new Date().toLocaleString() +'.xlsx', 'xlsx',{
+                        extend: {
+                            '!cols': colConf
+                        }
+                    });
+                    //	var timeend = Date.now();
+
+                    //	var spent = (timeend - timestart) / 1000;
+                    //	layer.alert('单纯导出耗时 '+spent+' s');
+                }
+                , error() {
+                    layer.alert('获取数据失败，请检查是否部署在本地服务器环境下');
+                }
+            });
+            layer.close(index);
+            return false;
+        });
         // 模糊查询条件
         form.on("submit(doSearch)", function (data) {
             index = layui.layer.msg('查询中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
@@ -165,7 +239,6 @@
             });
             return false;
         });
-
         // 监听行删除事件
         table.on('tool(loginfoTable)', function (obj) {
             var layEvent = obj.event, data = obj.data;

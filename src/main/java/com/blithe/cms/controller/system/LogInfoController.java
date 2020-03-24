@@ -3,6 +3,7 @@ package com.blithe.cms.controller.system;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.blithe.cms.common.exception.R;
+import com.blithe.cms.common.tools.StringUtil;
 import com.blithe.cms.pojo.system.Loginfo;
 import com.blithe.cms.service.LoginfoService;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,15 +35,22 @@ public class LogInfoController {
     @GetMapping("/list")
     public R queryLogList(Loginfo loginfo, Map<String,Object> params) {
         Loginfo loginfoNew = (Loginfo)params.get("loginfo");
-        Page page = new Page(loginfoNew.getPage(),loginfoNew.getLimit(),"logintime",false);
+        Page page = null;
         EntityWrapper wrapper = new EntityWrapper<>();
         // 条件构造b
         wrapper.like(StringUtils.isNotBlank(loginfo.getLoginname()),"loginname",loginfo.getLoginname());
         wrapper.like(StringUtils.isNotBlank(loginfo.getLoginip()),"loginip",loginfo.getLoginip());
         wrapper.ge(loginfo.getStartTime()!=null,"logintime",loginfo.getStartTime());
         wrapper.le(loginfo.getEndTime()!=null,"logintime",loginfo.getEndTime());
-        Page pages = this.loginfoService.selectPage(page, wrapper);
-        return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
+        if(!StringUtil.isNull(loginfoNew.getPage()) && !StringUtil.isNull(loginfoNew.getLimit())){
+            page = new Page(loginfoNew.getPage(),loginfoNew.getLimit(),"logintime",false);
+            Page pages = this.loginfoService.selectPage(page, wrapper);
+            return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
+        }else {
+            wrapper.orderBy("logintime",false);
+            List list = this.loginfoService.selectList(wrapper);
+            return R.ok().put("data",list);
+        }
     }
 
 
