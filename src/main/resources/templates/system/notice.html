@@ -228,20 +228,20 @@
             , limit: 20
             , done: function (res, currPage, count) {//数据渲染完的回调
                 layui.layer.close(index);
-                console.log(res);
+                // console.log(res);
 
                 //得到当前页码
-                console.log(currPage);
+                // console.log(currPage);
 
                 //得到数据总量
-                console.log(count);
+                // console.log(count);
                 if (res.data.length == 0 && currPage != 0) {
                     // 执行重载函数
                     // 页码
                     // curr - 1
                     tableIns.reload({
                         page: {
-                            curr: currPage - 1
+                            curr: (currPage - 1)
                         }
                     })
                 }
