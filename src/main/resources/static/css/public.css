@@ -1,3 +1,6 @@
+.layui-form-label {
+    font-size: 16px;
+}
 /*公共样式*/
 .childrenBody{ padding:10px;}
 .layui-table-view{ margin:0 !important;}

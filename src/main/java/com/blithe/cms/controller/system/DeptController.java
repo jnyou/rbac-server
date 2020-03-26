@@ -64,7 +64,9 @@ public class DeptController {
         wrapper.le(dept.getEndTime()!=null,"createtime",dept.getEndTime());
 
         // 接受前台left参数进行渲染数据表格
-        wrapper.eq(dept.getId()!=null,"id",dept.getId()).or().eq(dept.getId()!=null,"pid",dept.getId());
+        if(dept.getId()!=null){
+            wrapper.eq("id",dept.getId()).or().eq("pid",dept.getId());
+        }
         Page pages = this.deptService.selectPage(page, wrapper);
 
         return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
@@ -81,7 +83,7 @@ public class DeptController {
             if(CollectionUtils.isNotEmpty(list)){
                 return R.ok().put("value",true);
             }else {
-                this.deptService.deleteById(id);
+                this.deptService.deleteById(Integer.parseInt(id));
             }
         }catch (Exception e){
             return R.error(e.getMessage());
