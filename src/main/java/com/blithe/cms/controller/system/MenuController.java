@@ -21,7 +21,7 @@ import java.util.Map;
 
 /**
  * @Author: youjiannan
- * @Description: 菜单
+ * @Description: menu
  * @Date: 2020/3/19
  * @Param:
  * @Return:
@@ -33,8 +33,12 @@ public class MenuController {
 
 	@Autowired
 	private PermissionService permissionService;
-	
-	
+
+    /**
+     * load index left dtree meun
+     * @param permission
+     * @return
+     */
 	@GetMapping("/loadIndexLeftMenuJson")
 	public DataGridView loadIndexLeftMenuJson(Permission permission) {
 		//查询所有菜单
@@ -69,9 +73,9 @@ public class MenuController {
 		return new DataGridView(list2);
 	}
 
-
+/*****************************************menu manager start***********************************************/
 	/**
-	 * 加载菜单管理dtree JSON数据
+     * load menu manager left dtree  JSON data
 	 * @return
 	 */
 	@PostMapping("/loadMenuLeftDtreeJson")
@@ -88,7 +92,7 @@ public class MenuController {
 
 
 	/**
-	 *  查询菜单
+	 * query menu
 	 * @param Permission
 	 * @param params
 	 * @return
@@ -131,7 +135,7 @@ public class MenuController {
     }
 
 	/**
-	 * 保存
+	 * save
 	 * @param Permission
 	 * @return
 	 */
@@ -151,7 +155,7 @@ public class MenuController {
 	}
 
 	/**
-	 * 查询最大顺序码
+     * query max ordernum
 	 * @return
 	 */
 	@GetMapping("/loadMenuMaxOrderNum")
@@ -167,6 +171,7 @@ public class MenuController {
 		}
 	}
 
+/*****************************************menu manager end***********************************************/
 
 }
 

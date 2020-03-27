@@ -120,4 +120,32 @@ public class SystemController {
     }
 
 
+    /**
+     * 权限管理页面
+     * @return
+     */
+    @RequestMapping("/sys/toPermissionManager")
+    public String toPermissionManager(){
+        return "system/permission/permissionManager";
+    }
+
+    /**
+     * 权限管理left页面
+     * @return
+     */
+    @RequestMapping("/sys/toPermissionLeft")
+    public String toPermissionLeft(){
+        return "system/permission/permissionLeft";
+    }
+
+    /**
+     * 权限管理right页面
+     * @return
+     */
+    @RequestMapping("/sys/toPermissionRight")
+    public String toPermissionRight(){
+        return "system/permission/permissionRight";
+    }
+
+
 }

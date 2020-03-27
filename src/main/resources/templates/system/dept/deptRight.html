@@ -181,6 +181,7 @@
         var layer = layui.layer;
         var dtree = layui.dtree;
 		var laydate = layui.laydate;
+        var index = layui.layer.msg('查询中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
 		// 初始化日期组件
 		laydate.render({
 			elem: "#startTime",
@@ -323,6 +324,9 @@
 					}
 				}, yes: function (index, layero) { // 点击保存按钮触发
                     var requestData = $("#dataFrm").serializeObject();
+                    if(data != null){
+                        requestData.id = data.id;
+                    }
                     // alert(requestData.pid);
                     if(requestData.pid == null || requestData.pid == ""){
                         layer.msg("父级菜单不能为空", {icon: 2});
