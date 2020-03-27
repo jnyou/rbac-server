@@ -34,6 +34,9 @@
         <thymeleafshiro-version>2.0.0</thymeleafshiro-version>
         <poi-version>4.0.1</poi-version>
         <poi-ooxml>4.0.1</poi-ooxml>
+        <aliyun-java-sdk-version>4.4.6</aliyun-java-sdk-version>
+        <aliyun-java-sdk-dysmsapi-version>2.1.0</aliyun-java-sdk-dysmsapi-version>
+        <alipay-java-sdk-version>4.9.79.ALL</alipay-java-sdk-version>
     </properties>
 
     <dependencies>
@@ -98,12 +101,26 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>2.3.3</version>
         </dependency>
-
+        <!-- 数据库 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- redis -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
         <!-- HTML扫描器和标签补偿器 修正 -->
         <dependency>
             <groupId>net.sourceforge.nekohtml</groupId>
@@ -155,6 +172,24 @@
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
         </dependency>
+        <!-- aliyun 短信 -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>${aliyun-java-sdk-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>${aliyun-java-sdk-dysmsapi-version}</version>
+        </dependency>
+        <!-- alipay -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>${alipay-java-sdk-version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
