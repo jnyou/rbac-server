@@ -23,6 +23,7 @@ public class TreeNode {
 	private String icon;
 	private String href;
 	private Boolean spread;
+	private String checkArr = "0";
 	private List<TreeNode> children=new ArrayList<TreeNode>();
 
 
@@ -52,6 +53,19 @@ public class TreeNode {
 		this.href = href;
 		this.spread = spread;
 	}
-	
-	
+
+	/**
+	 * 权限分配的树
+	 * @param id
+	 * @param pid
+	 * @param title
+	 * @param checkArr
+	 */
+	public TreeNode(Integer id, Integer pid, String title,Boolean spread, String checkArr) {
+		this.id = id;
+		this.pid = pid;
+		this.title = title;
+		this.spread = spread;
+		this.checkArr = checkArr;
+	}
 }

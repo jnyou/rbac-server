@@ -15,4 +15,17 @@
         where rid = #{id}
     </delete>
 
+    <select id="queryRolePermissionIdsByRid" resultType="java.lang.Integer">
+        select pid from sys_role_permission where rid = #{roleId}
+    </select>
+
+    <insert id="insertBatchRolePermission" >
+        insert into sys_role_permission ( rid,pid )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.rid},#{item.pid})
+        </foreach>
+    </insert>
+
+
 </mapper>

@@ -6,12 +6,16 @@ import com.blithe.cms.mapper.system.PermissionMapper;
 import com.blithe.cms.mapper.system.RoleMapper;
 import com.blithe.cms.pojo.system.Role;
 import com.blithe.cms.service.RoleService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: youjiannan
@@ -52,13 +56,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 	 * 保存角色和菜单权限之间的关系
 	 */
 	@Override
-	public void saveRolePermission(Integer rid, Integer[] ids) {
+	public void insertBatchRolePermission(List<Map<String,Object>> params) {
 		//根据rid删除sys_role_permission
-		roleMapper.deleteRolePermissionByRid(rid);
-		if(ids!=null&&ids.length>0) {
-			for (Integer pid : ids) {
-				roleMapper.saveRolePermission(rid,pid);
-			}
+		if(CollectionUtils.isNotEmpty(params) && params.size() > 0){
+			roleMapper.deleteRolePermissionByRid((Serializable) params.get(0).get("rid"));
+			roleMapper.insertBatchRolePermission(params);
 		}
 	}
 }

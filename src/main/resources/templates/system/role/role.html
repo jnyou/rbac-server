@@ -13,6 +13,8 @@
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/layui/css/layui.css" media="all"/>
     <link rel="stylesheet" href="/css/public.css" media="all"/>
+    <link rel="stylesheet" href="/layui_ext/dtree/dtree.css" media="all"/>
+    <link rel="stylesheet" href="/layui_ext/dtree/font/dtreefont.css" media="all"/>
 </head>
 <body class="childrenBody">
 <form class="layui-form">
@@ -73,6 +75,10 @@
             </button>
             <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="roleDel"><span
                     class="layui-icon layui-icon-delete"></span>删除</a>
+
+            <button type="button" lay-event="permissionAssignment" class="layui-btn layui-btn-xs"><span
+                    class="layui-icon layui-icon-auz"></span>权限分配
+            </button>
         </div>
 
     </div>
@@ -117,23 +123,27 @@
     </div>
     <!-- 添加和修改的弹出层结束 -->
 
-
+    <!-- 权限分配弹出框开始 -->
+    <div style="display: none" id="loadChackArrDtreeDiv">
+        <ul id="permissionTree" class="dtree" data-id="0"></ul>
+    </div>
+    <!-- 权限分配弹出框结束 -->
 </form>
 
 <!-- JS部分 -->
 <script type="text/javascript" src="/layui/layui.js"></script>
 <!--先加载jquery-->
-<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-<!--再加载插件-->
-<script src="/layui_exts/excel.js"></script>
 <script>
-    layui.use(['jquery', 'table', 'laydate', 'layer', 'form','excel'], function () {
+    layui.extend({
+        dtree: '/layui_ext/dtree/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+    }).use(['jquery', 'table', 'laydate', 'layer', 'form','excel','dtree'], function () {
         var $ = layui.jquery;
         var form = layui.form;
         var table = layui.table;
         var layer = layui.layer;
         var laydate = layui.laydate;
         var excel = layui.excel;
+        var dtree = layui.dtree;
         var index = layui.layer.msg('查询中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
         var exportData = " ";			//定义全局变量
         // 初始化日期组件
@@ -152,7 +162,7 @@
         // 初始化数据表格
         var tableIns = table.render({
             elem: '#roleTable'
-            , height: "full-80"
+            , height: "full-120"
             , toolbar: '#roleToolBar' //开启头部工具栏，并为其绑定左侧模板
             , url: '/role/list' //数据接口
             , title: '角色信息表'
@@ -174,7 +184,7 @@
                 }
             }
             , cols: [ [
-                  {field: 'id', title: 'ID',sort: true, align: 'center'}
+                {field: 'id', title: 'ID',sort: true, align: 'center'}
                 , {field: 'name', title: '角色名称', align: 'center'}
                 , {field: 'remark', title: '角色备注', align: 'center'}
                 , {
@@ -303,6 +313,9 @@
                 case 'roleDel':
                     deleteRole(data);
                     break;
+                case 'permissionAssignment':
+                    permissionAssignment(data);
+                    break;
             };
         });
 
@@ -315,6 +328,61 @@
             }
         })
 
+        /**
+         * 显示所有权限和勾选自己的权限
+         */
+        function permissionAssignment(data) {
+            var permissionAssignment = layer.open({
+                type: 1
+                , title: '权限分配【'+data.title+'】'
+                , content: $('#loadChackArrDtreeDiv')
+                , area: ['400px', '500px']
+                , btn: ['<span class="layui-icon layui-icon-ok">确认分配</span>', '<span class="layui-icon layui-icon-close">关闭窗口</span>']
+                , btnAlign: 'c'
+                , shade: 0.8
+                , success: function (layero) {
+                    dtree.render({
+                        elem: "#permissionTree",
+                        url: "/role/permissionAssignment?roleId=" + data.id,
+                        checkbar: true,
+                        dataStyle: "layuiStyle",  //使用layui风格的数据格式
+                        dataFormat: "list",  //配置data的风格为list
+                        response: {message: "msg", statusCode: 0},  //修改response中返回数据的定义
+                        checkbarType: "all" // 默认就是all，其他的值为： no-all  p-casc   self  only
+                    });
+                }, yes: function (index, layero) { // 点击保存按钮触发
+                    var checkbarNodes = dtree.getCheckbarNodesParam("permissionTree");
+                    var requestData = [];
+                    $.each(checkbarNodes,function (index,item) {
+                        var jsonData = {
+                            "rid" : data.id,
+                            "pid" : item.nodeId
+                        }
+                        requestData.push(jsonData);
+                    })
+                    // alert(JSON.stringify(requestData));
+                    // layer.msg(JSON.stringify(checkbarNodes));
+                    $.ajax({
+                        type: 'post',
+                        url: '/role/insertBatchRolePermission',
+                        contentType: "application/json",
+                        data: JSON.stringify(requestData),
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.code != 0) {
+                                layer.msg("服务器请求失败！");
+                                return false;
+                            } else {
+                                layer.msg('分配权限成功', {icon: 1});
+                                //不刷新页面 留在当前
+                                tableIns.reload();
+                            }
+                            layer.close(permissionAssignment);
+                        }
+                    });
+                }
+            })
+        }
 
         // 添加编辑公共弹窗
         function commonOpenWindowsAddAndUpdate(data) {
@@ -377,6 +445,9 @@
         }
     })
 </script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<!--再加载插件-->
+<script src="/layui_exts/excel.js"></script>
 
 </body>
 </html>

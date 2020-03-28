@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.blithe.cms.pojo.system.Role;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,6 +29,6 @@ public interface RoleService extends IService<Role> {
 	 * @param roleId
 	 * @param ids
 	 */
-	void saveRolePermission(Integer roleId, Integer[] ids);
+	void insertBatchRolePermission(List<Map<String,Object>> params);
 
 }
