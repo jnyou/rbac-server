@@ -1,9 +1,11 @@
 package com.blithe.cms.controller.system;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.blithe.cms.common.exception.R;
+import com.blithe.cms.common.exception.RbacException;
 import com.blithe.cms.common.tools.Constast;
 import com.blithe.cms.common.tools.DataGridView;
 import com.blithe.cms.common.tools.PinyinUtils;
@@ -165,6 +167,25 @@ public class UserController {
         }else {
             return R.ok().put("value", "");
         }
+    }
+
+    /**
+     * 重置密码
+     */
+    @PostMapping("/resetPwd")
+    public R resetPwd(Integer id){
+
+        SysUser user = new SysUser();
+        user.setId(id);
+        String salt = IdUtil.simpleUUID().toUpperCase();
+        user.setSalt(salt);
+        user.setPwd(new Md5Hash(Constast.USER_DEFAULT_PWD, salt, 2).toString());
+        try {
+            userService.updateById(user);
+        }catch (Exception e){
+            throw new RbacException(e.getMessage());
+        }
+        return R.ok();
     }
 
 }
