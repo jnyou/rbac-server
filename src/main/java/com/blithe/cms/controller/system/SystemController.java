@@ -157,5 +157,14 @@ public class SystemController {
     }
 
 
+    /**
+     * 用户管理
+     * @return
+     */
+    @RequestMapping("/sys/toUserManager")
+    public String toUserManager(){
+        return "system/user/user";
+    }
+
 
 }

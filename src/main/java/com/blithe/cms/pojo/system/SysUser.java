@@ -1,10 +1,13 @@
 package com.blithe.cms.pojo.system;
 
-import java.util.Date;
-
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import com.blithe.cms.common.base.BaseVO;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * 用户管理
@@ -13,6 +16,7 @@ import lombok.Data;
 @Data
 @TableName("sys_user")
 public class SysUser extends BaseVO {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     private String name;
@@ -50,4 +54,14 @@ public class SysUser extends BaseVO {
     private String salt;
 
     private static final long serialVersionUID = 1L;
+    /**
+     *  部门名称
+      */
+    @TableField(exist = false)
+    private String depeName;
+    /**
+     *  上级名称
+     */
+    @TableField(exist = false)
+    private String mgrName;
 }

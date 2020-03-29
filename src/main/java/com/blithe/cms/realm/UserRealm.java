@@ -12,6 +12,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserRealm extends AuthorizingRealm {
 
     @Autowired
+    @Lazy
     private SysUserService sysUserService;
 
     @Override
@@ -40,7 +42,7 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-
+//        System.out.println("代理对象:" + sysUserService.getClass().getSimpleName()); // 通过懒加载交给代理对象 代理对象:$Proxy85
         EntityWrapper<SysUser> entityWrapper = new EntityWrapper<SysUser>();
         // token.getPrincipal().toString() 获取身份
         entityWrapper.eq("loginname", token.getPrincipal().toString());

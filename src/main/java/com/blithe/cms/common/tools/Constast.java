@@ -43,4 +43,9 @@ public interface Constast {
 	 */
 	public static final String DEL_IP = "0:0:0:0:0:0:0:1";
 
+
+	/**
+	 * 默认密码
+	 */
+	public static final String USER_DEFAULT_PWD = "123456";
 }
