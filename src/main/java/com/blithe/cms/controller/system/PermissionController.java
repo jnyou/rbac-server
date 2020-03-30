@@ -59,10 +59,8 @@ public class PermissionController {
      * @return
      */
     @GetMapping("/list")
-    public R queryPermissionList(Permission permission, Map<String,Object> params){
-
-        Permission permissionNew = (Permission)params.get("permission");
-        Page page = new Page<>(permissionNew.getPage(),permissionNew.getLimit(),"ordernum",true);
+    public R queryPermissionList(Permission permission){
+        Page page = new Page<>(permission.getPage(),permission.getLimit(),"ordernum",true);
         Wrapper wrapper = new EntityWrapper();
         wrapper.like(StringUtils.isNotBlank(permission.getTitle()),"title",permission.getTitle());
         wrapper.like(StringUtils.isNotBlank(permission.getPercode()),"percode",permission.getPercode());
@@ -71,9 +69,9 @@ public class PermissionController {
         if(permission.getId()!=null){
             wrapper.eq("id",permission.getId()).or().eq("pid",permission.getId());
         }
-        Page pages = this.permissionService.selectPage(page, wrapper);
+        this.permissionService.selectPage(page, wrapper);
 
-        return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
+        return R.ok().put("count",page.getTotal()).put("data",page.getRecords());
 
     }
 

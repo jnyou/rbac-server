@@ -46,26 +46,22 @@ public class RoleController {
 
     /**
      * query role
-     * @param Role
+     * @param Role 含导出功能
      * @param params
      * @return
      */
     @GetMapping("/list")
-    public R queryRoleList(Role role, Map<String,Object> params){
-        Page page = null;
-        Role roleNew = (Role)params.get("role");
-
+    public R queryRoleList(Role role){
         Wrapper wrapper = new EntityWrapper();
         wrapper.like(StringUtils.isNotBlank(role.getName()),"name",role.getName());
         wrapper.ge(role.getStartTime()!=null,"createtime",role.getStartTime());
         wrapper.le(role.getEndTime()!=null,"createtime",role.getEndTime());
-
-        if(!StringUtil.isNull(roleNew.getPage()) && !StringUtil.isNull(roleNew.getLimit())){
-            page = new Page<>(roleNew.getPage(),roleNew.getLimit(),"createtime",false);
-            Page pages = roleService.selectPage(page, wrapper);
-            return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
+        wrapper.orderBy("createtime",false);
+        if(!StringUtil.isNull(role.getPage()) && !StringUtil.isNull(role.getLimit())){
+            Page page = new Page<>(role.getPage(),role.getLimit());
+            roleService.selectPage(page, wrapper);
+            return R.ok().put("count",page.getTotal()).put("data",page.getRecords());
         }else {
-            wrapper.orderBy("createtime",false);
             List list = roleService.selectList(wrapper);
             return R.ok().put("data",list);
         }

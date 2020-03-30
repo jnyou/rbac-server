@@ -178,6 +178,7 @@ layui.extend({
 		var table=layui.table;
 		var layer=layui.layer;
 		var dtree=layui.dtree;
+		var index = layui.layer.msg('查询中，请稍候...', {icon: 16, time: false, shade: 0.6, shadeClose: false});
 		//加载 数据
 		 tableIns=table.render({
 			 elem: '#userTable'
@@ -207,6 +208,7 @@ layui.extend({
 		      ,{fixed: 'right', title:'操作', toolbar: '#userRowBar',align:'center',width:'400'}
 		    ] ]
 		    ,done: function(res, curr, count){
+				 layui.layer.close(index);
 			 	//处理删除某一页最后一条数据的BUG
 		        if(res.data.length==0&&curr!=1){
 		        	tableIns.reload({

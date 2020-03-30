@@ -30,16 +30,15 @@ public class NoticeController {
     private NoticeService noticeService;
 
     @GetMapping("/list")
-    public R queryNoticeList(Notice notice, Map<String,Object> params){
-        Notice noticeNew = (Notice)params.get("notice");
-        Page<Notice> page = new Page<Notice>(noticeNew.getPage(),noticeNew.getLimit(),"createtime",false);
+    public R queryNoticeList(Notice notice){
+        Page<Notice> page = new Page<Notice>(notice.getPage(),notice.getLimit(),"createtime",false);
         EntityWrapper wrapper = new EntityWrapper();
         wrapper.like(StringUtils.isNotBlank(notice.getTitle()),"title",notice.getTitle());
         wrapper.like(StringUtils.isNotBlank(notice.getOpername()),"opername",notice.getOpername());
         wrapper.ge(notice.getStartTime()!=null,"createtime",notice.getStartTime());
         wrapper.le(notice.getEndTime()!=null,"createtime",notice.getEndTime());
-        Page pages = noticeService.selectPage(page, wrapper);
-        return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
+        noticeService.selectPage(page, wrapper);
+        return R.ok().put("count",page.getTotal()).put("data",page.getRecords());
     }
 
     @PostMapping("/deleteBatch")

@@ -35,14 +35,7 @@ public class DeptController {
      */
     @PostMapping("/loadDeptLeftDtreeJson")
     public DataGridView loadDeptLeftDtreeJson(){
-
-        List<Dept> deptList = this.deptService.selectList(new EntityWrapper<>());
-        List<TreeNode> treeNodes = new ArrayList<>();
-        for (Dept dept : deptList) {
-            Boolean openFlag = dept.getOpen() == 1 ? true: false;
-            treeNodes.add(new TreeNode(dept.getId(),dept.getPid(),dept.getTitle(),openFlag));
-        }
-        return new DataGridView(treeNodes);
+        return deptService.loadDeptLeftDtreeJson();
     }
 
 
@@ -53,10 +46,8 @@ public class DeptController {
      * @return
      */
     @GetMapping("/list")
-    public R queryDeptList(Dept dept, Map<String,Object> params){
-
-        Dept deptNew = (Dept)params.get("dept");
-        Page page = new Page<>(deptNew.getPage(),deptNew.getLimit(),"ordernum",true);
+    public R queryDeptList(Dept dept){
+        Page page = new Page<>(dept.getPage(),dept.getLimit(),"ordernum",true);
         Wrapper wrapper = new EntityWrapper();
         wrapper.like(StringUtils.isNotBlank(dept.getTitle()),"title",dept.getTitle());
         wrapper.like(StringUtils.isNotBlank(dept.getAddress()),"address",dept.getAddress());
@@ -67,9 +58,9 @@ public class DeptController {
         if(dept.getId()!=null){
             wrapper.eq("id",dept.getId()).or().eq("pid",dept.getId());
         }
-        Page pages = this.deptService.selectPage(page, wrapper);
+        this.deptService.selectPage(page, wrapper);
 
-        return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
+        return R.ok().put("count",page.getTotal()).put("data",page.getRecords());
 
     }
 

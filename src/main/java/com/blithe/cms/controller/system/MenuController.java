@@ -45,48 +45,8 @@ public class MenuController {
      * @return
      */
 	@GetMapping("/loadIndexLeftMenuJson")
-	public DataGridView loadIndexLeftMenuJson(Permission permission) {
-		//查询所有菜单
-		EntityWrapper<Permission> queryWrapper=new EntityWrapper<>();
-		//设置只能查询菜单
-		queryWrapper.eq("type", Constast.TYPE_MNEU);
-		queryWrapper.eq("available", Constast.AVAILABLE_TRUE);
-		
-		SysUser user = (SysUser) HttpContextUtils.getHttpServletRequest().getSession().getAttribute("user");
-		List<Permission> list=null;
-		// 判断用户类型
-		if (Constast.USER_TYPE_SUPER.equals(user.getType())) {
-			// 超级管理员登陆
-			list = permissionService.selectList(queryWrapper);
-		} else {
-			// 普通用户登陆
-			//根据用户ID+角色+权限去查询
-			Integer uid = user.getId();
-			List<Integer> rids = userService.selectRidByUid(uid);
-			//去重查询权限和菜单id
-			Set<Object> dinSet = new HashSet<>();
-			for (Integer rid : rids) {
-				dinSet.addAll(roleService.queryRolePermissionIdsByRid(rid));
-			}
-			if(CollectionUtils.isNotEmpty(dinSet)){
-				queryWrapper.in("id",dinSet);
-				list = permissionService.selectList(queryWrapper);
-			}
-		}
-
-		List<TreeNode> treeNodes=new ArrayList<>();
-		for (Permission p : list) {
-			Integer id=p.getId();
-			Integer pid=p.getPid();
-			String title=p.getTitle();
-			String icon=p.getIcon();
-			String href=p.getHref();
-			Boolean spread=p.getOpen().equals(Constast.OPEN_TRUE)?true:false;
-			treeNodes.add(new TreeNode(id, pid, title, icon, href, spread));
-		}
-		//构造层级关系
-		List<TreeNode> list2 = TreeNodeBuilder.build(treeNodes, 1);
-		return new DataGridView(list2);
+	public DataGridView loadIndexLeftMenuJson() {
+		return permissionService.loadIndexLeftMenuJson();
 	}
 
 /*****************************************menu manager start***********************************************/
@@ -114,10 +74,8 @@ public class MenuController {
 	 * @return
 	 */
 	@GetMapping("/list")
-	public R queryMenuList(Permission permission, Map<String,Object> params){
-
-		Permission permissionNew = (Permission)params.get("permission");
-		Page page = new Page<>(permissionNew.getPage(),permissionNew.getLimit(),"ordernum",true);
+	public R queryMenuList(Permission permission){
+		Page page = new Page<>(permission.getPage(),permission.getLimit(),"ordernum",true);
 		Wrapper wrapper = new EntityWrapper();
 		wrapper.like(StringUtils.isNotBlank(permission.getTitle()),"title",permission.getTitle());
         wrapper.eq("type", Constast.TYPE_MNEU);
@@ -125,9 +83,9 @@ public class MenuController {
         if(permission.getId()!=null){
             wrapper.eq("id",permission.getId()).or().eq("pid",permission.getId());
         }
-		Page pages = this.permissionService.selectPage(page, wrapper);
+		this.permissionService.selectPage(page, wrapper);
 
-		return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
+		return R.ok().put("count",page.getTotal()).put("data",page.getRecords());
 
 	}
 

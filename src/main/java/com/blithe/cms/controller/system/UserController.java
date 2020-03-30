@@ -51,22 +51,20 @@ public class UserController {
      * @return
      */
     @GetMapping("/list")
-    public R querySysUserList(SysUser sysUser, Map<String,Object> params){
+    public R querySysUserList(SysUser sysUser){
 
-        SysUser userNew = (SysUser)params.get("sysUser");
-        Page page = new Page<>(userNew.getPage(),userNew.getLimit(),"ordernum",true);
+        Page page = new Page<>(sysUser.getPage(),sysUser.getLimit(),"ordernum",true);
         EntityWrapper wrapper = new EntityWrapper();
         // 用户名或者登录名
         wrapper.like(StringUtils.isNotBlank(sysUser.getName()), "loginname", sysUser.getName()).or().like(StringUtils.isNotBlank(sysUser.getName()), "name", sysUser.getName());
-
         wrapper.eq(StringUtils.isNotBlank(sysUser.getAddress()), "address", sysUser.getAddress());
         // 查询系统用户
         wrapper.eq("type", Constast.USER_TYPE_NORMAL);
         // 部门id
         wrapper.eq(sysUser.getDeptid()!=null,"deptid",sysUser.getDeptid());
-        Page pages = this.userService.selectPage(page, wrapper);
+        this.userService.selectPage(page, wrapper);
 
-        List<SysUser> sysUsers = pages.getRecords();
+        List<SysUser> sysUsers = page.getRecords();
         // 处理部门名称和上级名称
         if(CollectionUtils.isNotEmpty(sysUsers)){
             for (SysUser user : sysUsers) {
@@ -81,7 +79,7 @@ public class UserController {
                 }
             }
         }
-        return R.ok().put("count",pages.getTotal()).put("data",sysUsers);
+        return R.ok().put("count",page.getTotal()).put("data",sysUsers);
 
     }
 

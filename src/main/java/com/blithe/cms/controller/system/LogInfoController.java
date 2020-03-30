@@ -29,25 +29,23 @@ public class LogInfoController {
     private LoginfoService loginfoService;
 
     /**
-     * 查询
+     * 查询 含导出功能
      * @return
      */
     @GetMapping("/list")
-    public R queryLogList(Loginfo loginfo, Map<String,Object> params) {
-        Loginfo loginfoNew = (Loginfo)params.get("loginfo");
-        Page page = null;
+    public R queryLogList(Loginfo loginfo) {
         EntityWrapper wrapper = new EntityWrapper<>();
         // 条件构造b
         wrapper.like(StringUtils.isNotBlank(loginfo.getLoginname()),"loginname",loginfo.getLoginname());
         wrapper.like(StringUtils.isNotBlank(loginfo.getLoginip()),"loginip",loginfo.getLoginip());
         wrapper.ge(loginfo.getStartTime()!=null,"logintime",loginfo.getStartTime());
         wrapper.le(loginfo.getEndTime()!=null,"logintime",loginfo.getEndTime());
-        if(!StringUtil.isNull(loginfoNew.getPage()) && !StringUtil.isNull(loginfoNew.getLimit())){
-            page = new Page(loginfoNew.getPage(),loginfoNew.getLimit(),"logintime",false);
-            Page pages = this.loginfoService.selectPage(page, wrapper);
-            return R.ok().put("count",pages.getTotal()).put("data",pages.getRecords());
+        wrapper.orderBy("logintime",false);
+        if(!StringUtil.isNull(loginfo.getPage()) && !StringUtil.isNull(loginfo.getLimit())){
+            Page page = new Page(loginfo.getPage(),loginfo.getLimit());
+            this.loginfoService.selectPage(page, wrapper);
+            return R.ok().put("count",page.getTotal()).put("data",page.getRecords());
         }else {
-            wrapper.orderBy("logintime",false);
             List list = this.loginfoService.selectList(wrapper);
             return R.ok().put("data",list);
         }
