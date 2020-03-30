@@ -146,7 +146,7 @@ public class RoleController {
         for (Permission p1 : allAvailablePermission){
             String checkArr = "0";
             for (Permission p2 : havePermission){
-                if(p1.getId() == p2.getId()){
+                if(p1.getId().equals(p2.getId())){
                     checkArr = "1";
                     break;
                 }

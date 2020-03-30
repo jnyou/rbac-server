@@ -460,40 +460,53 @@ layui.extend({
 				area:['800px','600px'],
 				title:'分配【'+data.name+'】的角色',
 				btn: ['<span class=layui-icon>&#xe605;确认分配</span>', '<span class=layui-icon>&#x1006;关闭窗口</span>'],
-			    yes: function(index, layero){
-			    	var checkStatus = table.checkStatus('roleTable'); 
-			    	var params="uid="+data.id;
+				btnAlign: 'c',
+				success:function(){
+					//初始化角色列表
+					table.render({
+						elem: '#roleTable'
+						,url:'/sysUser/initRoleByUserId'
+						,where:{
+							uid:data.id
+						}
+						,cols: [ [
+							{type:'checkbox',align:'center'}
+							,{field:'id', title:'ID',align:'center'}
+							,{field:'name', title:'角色名称',align:'center'}
+							,{field:'remark', title:'角色备注',align:'center'}
+						] ]
+					});
+				},
+				yes: function(index, layero){
+			    	var checkStatus = table.checkStatus('roleTable');
+					var requestData = [];
 			    	$.each(checkStatus.data,function(index,item){
-			    		params+="&ids="+item.id;
+						jsonData = {
+							"uid" : data.id,
+							"rids" : item.id
+						}
+						requestData.push(jsonData);
 			    	});
-			    	$.post("/user/saveUserRole",params,function(res){
-			    		layer.msg(res.msg);
-			    	})
+					$.ajax({
+						type: 'post',
+						url: '/sysUser/insertBatchUidAndRid',
+						contentType: "application/json",
+						data: JSON.stringify(requestData),
+						dataType: "json",
+						success: function (res) {
+							if (res.code != 0) {
+								layer.msg("服务器请求失败！");
+								return false;
+							} else {
+								layer.msg('角色分配成功', {icon: 1});
+							}
+							layer.close(mainIndex);
+						}
+					});
 			    },
 			    btn2: function(index, layero){
 			    //return false 开启该代码可禁止点击该按钮关闭
-			    },
-			    btnAlign: 'c',
-				success:function(){
-					initRoleTable(data);
-				}
-			});
-		}
-		var roleTableIns;
-		//初始化角色列表
-		function initRoleTable(data){
-			roleTableIns=table.render({
-				 elem: '#roleTable'
-			    ,url:'/user/initRoleByUserId'
-			    ,where:{
-			    	id:data.id
 			    }
-			    ,cols: [ [
-			       {type:'checkbox',align:'center'}
-			      ,{field:'id', title:'ID',align:'center'}
-			      ,{field:'name', title:'角色名称',align:'center'}
-			      ,{field:'remark', title:'角色备注',align:'center'}
-			    ] ]
 			});
 		}
 	});

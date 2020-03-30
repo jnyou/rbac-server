@@ -10,8 +10,10 @@ import com.blithe.cms.common.tools.Constast;
 import com.blithe.cms.common.tools.DataGridView;
 import com.blithe.cms.common.tools.PinyinUtils;
 import com.blithe.cms.pojo.system.Dept;
+import com.blithe.cms.pojo.system.Role;
 import com.blithe.cms.pojo.system.SysUser;
 import com.blithe.cms.service.DeptService;
+import com.blithe.cms.service.RoleService;
 import com.blithe.cms.service.SysUserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,9 +21,7 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * (SysUser)表控制层
@@ -40,6 +40,9 @@ public class UserController {
 
     @Autowired
     private DeptService deptService;
+
+    @Autowired
+    private RoleService roleService;
 
     /**
      *  查询用户
@@ -185,6 +188,56 @@ public class UserController {
         }catch (Exception e){
             throw new RbacException(e.getMessage());
         }
+        return R.ok();
+    }
+
+    /**
+     * 显示所有角色并显示已经拥有的角色
+     */
+    @GetMapping("/initRoleByUserId")
+    public R initRoleByUserId(Integer uid){
+        /**
+         * 查询所有可用的角色
+         */
+        EntityWrapper wrapper = new EntityWrapper();
+        wrapper.eq("available", 1);
+        List<Map<String, Object>> selectMapsPage = roleService.selectMaps(wrapper);
+        /**
+         * 根据userid查询对应的已经勾选的角色
+         */
+        // 先查询拥有的所有角色
+        List<Integer> rids = userService.selectRidByUid(uid);
+        // 根据角色id查询拥有的所有角色
+        List<Role> roleList = null;
+        if(CollectionUtils.isNotEmpty(rids)){
+            wrapper.in("id",rids);
+            roleList = roleService.selectList(wrapper);
+        }else{
+            roleList = new ArrayList<>();
+        }
+        for (Map<String,Object> r1 : selectMapsPage) {
+            Boolean LAY_CHECKED=false;
+            for (Role r2 : roleList) {
+                if(r1.get("id").equals(r2.getId())){
+                    LAY_CHECKED = true;
+                }
+            }
+            r1.put("LAY_CHECKED",LAY_CHECKED);
+        }
+
+        return R.ok().put("data",selectMapsPage).put("count",selectMapsPage.size());
+
+    }
+
+
+    /**
+     * 批量保存用户id和角色id
+     * @param params
+     * @return
+     */
+    @RequestMapping("/insertBatchUidAndRid")
+    public R insertBatchUidAndRid(@RequestBody List<Map<String,Object>> params){
+        userService.insertBatchUidAndRid(params);
         return R.ok();
     }
 
