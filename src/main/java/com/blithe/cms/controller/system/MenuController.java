@@ -9,15 +9,14 @@ import com.blithe.cms.common.tools.*;
 import com.blithe.cms.pojo.system.Permission;
 import com.blithe.cms.pojo.system.SysUser;
 import com.blithe.cms.service.PermissionService;
+import com.blithe.cms.service.RoleService;
+import com.blithe.cms.service.SysUserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: youjiannan
@@ -34,6 +33,12 @@ public class MenuController {
 	@Autowired
 	private PermissionService permissionService;
 
+	@Autowired
+	private RoleService roleService;
+
+	@Autowired
+	private SysUserService userService;
+
     /**
      * load index left dtree meun
      * @param permission
@@ -49,15 +54,26 @@ public class MenuController {
 		
 		SysUser user = (SysUser) HttpContextUtils.getHttpServletRequest().getSession().getAttribute("user");
 		List<Permission> list=null;
-		// 超级管理员登陆
-		if(user.getType().equals(Constast.USER_TYPE_SUPER)) {
+		// 判断用户类型
+		if (Constast.USER_TYPE_SUPER.equals(user.getType())) {
+			// 超级管理员登陆
 			list = permissionService.selectList(queryWrapper);
-		}else {
-			// 普通用户登陆 TODO
-			//根据用户ID+角色+权限去查询 
-			list = permissionService.selectList(queryWrapper);
+		} else {
+			// 普通用户登陆
+			//根据用户ID+角色+权限去查询
+			Integer uid = user.getId();
+			List<Integer> rids = userService.selectRidByUid(uid);
+			//去重查询权限和菜单id
+			Set<Object> dinSet = new HashSet<>();
+			for (Integer rid : rids) {
+				dinSet.addAll(roleService.queryRolePermissionIdsByRid(rid));
+			}
+			if(CollectionUtils.isNotEmpty(dinSet)){
+				queryWrapper.in("id",dinSet);
+				list = permissionService.selectList(queryWrapper);
+			}
 		}
-		
+
 		List<TreeNode> treeNodes=new ArrayList<>();
 		for (Permission p : list) {
 			Integer id=p.getId();

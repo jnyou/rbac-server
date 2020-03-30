@@ -91,7 +91,8 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">角色名称</label>
                 <div class="layui-input-block">
-                    <input type="text" name="name" id="name" lay-verify="required" autocomplete="off"
+                    <input type="hidden" name="id">
+                    <input type="text" name="name" id="openname" lay-verify="required" autocomplete="off"
                            placeholder="请输入角色名称" class="layui-input">
                 </div>
             </div>
@@ -334,7 +335,7 @@
         function permissionAssignment(data) {
             var permissionAssignment = layer.open({
                 type: 1
-                , title: '权限分配【'+data.title+'】'
+                , title: '权限分配【'+data.name+'】'
                 , content: $('#loadChackArrDtreeDiv')
                 , area: ['400px', '500px']
                 , btn: ['<span class="layui-icon layui-icon-ok">确认分配</span>', '<span class="layui-icon layui-icon-close">关闭窗口</span>']
@@ -395,8 +396,7 @@
                 , success: function (layero) {
                     // 重置表单内容
                     $("#dataFrm")[0].reset();
-                    if (data == null) {
-                    } else {
+                    if (data != null) {
                         //装载新的数据
                         form.val("dataFrm", data);
                     }
@@ -404,8 +404,10 @@
             })
         }
 
-        form.on("submit(doSubmit)",function (data) {
-            $.post(url, data.field, function (result) {
+
+        $("#doSubmit").click(function () {
+            var data = $("#dataFrm").serialize();
+            $.post(url, data, function (result) {
                 if (result.code != 0) {
                     layer.msg("服务器请求失败！");
                     return false;
