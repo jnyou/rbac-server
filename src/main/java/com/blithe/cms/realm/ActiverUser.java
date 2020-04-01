@@ -1,5 +1,7 @@
 package com.blithe.cms.realm;
 
+import com.blithe.cms.pojo.system.Permission;
+import com.blithe.cms.pojo.system.Role;
 import com.blithe.cms.pojo.system.SysUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +23,7 @@ public class ActiverUser {
 
     private SysUser sysUser;
 
-    private List<String> role;
+    private List<String> roles;
 
     private List<String> permissions;
 }
