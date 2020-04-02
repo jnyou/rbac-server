@@ -17,10 +17,12 @@ import com.blithe.cms.service.RoleService;
 import com.blithe.cms.service.SysUserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.crypto.hash.Md2Hash;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -239,4 +241,27 @@ public class UserController {
         return R.ok();
     }
 
+
+    /**
+     * 修改密码
+     */
+    @PostMapping("/changePwd")
+    public R changePwd(@RequestParam Map<String,Object> params){
+        SysUser sysUser = userService.selectById((Serializable) params.get("id"));
+        String oldPwd = new Md5Hash(params.get("pwd"), sysUser.getSalt(), 2).toString();
+        if(!oldPwd.equals(sysUser.getPwd())){
+            return R.ok().put("msg","旧密码不正确");
+        }else {
+            SysUser user = new SysUser();
+            user.setId(Integer.parseInt(params.get("id").toString()));
+            String newPwd = new Md5Hash(params.get("newPwd"), sysUser.getSalt(), 2).toString();
+            user.setPwd(newPwd);
+            boolean flag = userService.updateById(user);
+            if(flag){
+                return R.ok().put("msg","密码修改成功");
+            }else {
+                return R.error();
+            }
+        }
+    }
 }

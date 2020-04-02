@@ -63,7 +63,6 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Override
     public DataGridView loadIndexLeftMenuJson(){
-        log.info("从数据库中获取菜单：");
         //查询所有菜单
         EntityWrapper<Permission> queryWrapper=new EntityWrapper<>();
         //设置只能查询菜单
@@ -76,7 +75,6 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         if (Constast.USER_TYPE_SUPER.equals(user.getType())) {
             // 超级管理员登陆
             list = permissionMapper.selectList(queryWrapper);
-            log.info("从数据库中获取菜单：");
         } else {
             // 普通用户登陆
             //根据用户ID+角色+权限去查询

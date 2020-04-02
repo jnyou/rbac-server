@@ -167,4 +167,14 @@ public class SystemController {
     }
 
 
+    /**
+     * 修改密码
+     * @return
+     */
+    @RequestMapping("/toChangePwd")
+    public String toChangePwd(){
+        return "system/user/changePwd";
+}
+
+
 }
