@@ -3,12 +3,10 @@ package com.blithe.cms.realm;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.blithe.cms.common.tools.Constast;
-import com.blithe.cms.pojo.system.Permission;
-import com.blithe.cms.pojo.system.Role;
 import com.blithe.cms.pojo.system.SysUser;
-import com.blithe.cms.service.PermissionService;
-import com.blithe.cms.service.RoleService;
-import com.blithe.cms.service.SysUserService;
+import com.blithe.cms.service.system.PermissionService;
+import com.blithe.cms.service.system.RoleService;
+import com.blithe.cms.service.system.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -22,7 +20,6 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
-import java.util.Collection;
 import java.util.List;
 
 

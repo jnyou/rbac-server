@@ -1,4 +1,4 @@
-package com.blithe.cms.service;
+package com.blithe.cms.service.system;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.blithe.cms.pojo.system.Notice;

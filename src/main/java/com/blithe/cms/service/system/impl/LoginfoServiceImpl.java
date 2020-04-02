@@ -1,9 +1,9 @@
-package com.blithe.cms.service.impl;
+package com.blithe.cms.service.system.impl;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.blithe.cms.mapper.system.LoginfoMapper;
 import com.blithe.cms.pojo.system.Loginfo;
-import com.blithe.cms.service.LoginfoService;
+import com.blithe.cms.service.system.LoginfoService;
 import org.springframework.stereotype.Service;
 
 /**

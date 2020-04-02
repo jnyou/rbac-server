@@ -6,14 +6,13 @@ import com.blithe.cms.common.exception.R;
 import com.blithe.cms.common.tools.HttpContextUtils;
 import com.blithe.cms.pojo.system.Notice;
 import com.blithe.cms.pojo.system.SysUser;
-import com.blithe.cms.service.NoticeService;
+import com.blithe.cms.service.system.NoticeService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @ClassName NoticeController

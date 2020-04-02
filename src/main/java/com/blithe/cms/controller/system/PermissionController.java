@@ -7,16 +7,13 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.blithe.cms.common.exception.R;
 import com.blithe.cms.common.tools.*;
 import com.blithe.cms.pojo.system.Permission;
-import com.blithe.cms.pojo.system.SysUser;
-import com.blithe.cms.service.PermissionService;
-import org.apache.commons.collections.CollectionUtils;
+import com.blithe.cms.service.system.PermissionService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: youjiannan

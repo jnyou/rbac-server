@@ -68,13 +68,10 @@
 					success: function(data){
                         //设置登录按钮 恢复可点击   在前端防止 重复点击
                         btn.text("登录").attr("disabled",false).removeClass("layui-disabled");
-						console.log(data);
 						if(data.code == 0){
-                            // 成功成功
-                            setTimeout(function(){
-                                location.href = "/index";
-                                layer.msg(data.msg);
-                            },1000);
+							layer.msg(data.msg);
+							// 成功成功
+							location.href = "/index";
                         }else{
                             layer.msg(data.msg);
                         }

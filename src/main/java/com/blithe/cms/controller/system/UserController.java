@@ -1,7 +1,6 @@
 package com.blithe.cms.controller.system;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.blithe.cms.common.exception.R;
@@ -12,12 +11,11 @@ import com.blithe.cms.common.tools.PinyinUtils;
 import com.blithe.cms.pojo.system.Dept;
 import com.blithe.cms.pojo.system.Role;
 import com.blithe.cms.pojo.system.SysUser;
-import com.blithe.cms.service.DeptService;
-import com.blithe.cms.service.RoleService;
-import com.blithe.cms.service.SysUserService;
+import com.blithe.cms.service.system.DeptService;
+import com.blithe.cms.service.system.RoleService;
+import com.blithe.cms.service.system.SysUserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.crypto.hash.Md2Hash;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

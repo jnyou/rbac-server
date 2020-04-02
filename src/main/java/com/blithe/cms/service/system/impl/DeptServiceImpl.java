@@ -1,4 +1,4 @@
-package com.blithe.cms.service.impl;
+package com.blithe.cms.service.system.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -7,7 +7,7 @@ import com.blithe.cms.common.tools.TreeNode;
 import com.blithe.cms.config.redis.RedisCompoent;
 import com.blithe.cms.mapper.system.DeptMapper;
 import com.blithe.cms.pojo.system.Dept;
-import com.blithe.cms.service.DeptService;
+import com.blithe.cms.service.system.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;

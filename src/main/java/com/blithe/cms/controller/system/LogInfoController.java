@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.blithe.cms.common.exception.R;
 import com.blithe.cms.common.tools.StringUtil;
 import com.blithe.cms.pojo.system.Loginfo;
-import com.blithe.cms.service.LoginfoService;
+import com.blithe.cms.service.system.LoginfoService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

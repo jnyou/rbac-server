@@ -1,10 +1,10 @@
-package com.blithe.cms.service.impl;
+package com.blithe.cms.service.system.impl;
 
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.blithe.cms.mapper.system.SysUserMapper;
 import com.blithe.cms.pojo.system.SysUser;
-import com.blithe.cms.service.SysUserService;
+import com.blithe.cms.service.system.SysUserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
