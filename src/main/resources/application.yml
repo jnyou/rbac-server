@@ -68,6 +68,21 @@ spring:
     database: 0 # 数据库索引，默认是0
 
 
+    # 文件上传配置
+    # 默认支持文件上传
+  servlet:
+    multipart:
+      enabled: true
+    # 支持文件写入磁盘
+      file-size-threshold: 0
+    # 上传文件的临时目录    usr/local/nmdc/upload
+      location: D:/projectdev/upload_cms/
+    # 最大支持文件大小
+      max-file-size: 200MB
+    # 最大支持请求大小
+      max-request-size: 200MB
+
+
 mybatis-plus:
   mapper-locations: classpath:mapper/*/*.xml
   ##主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";

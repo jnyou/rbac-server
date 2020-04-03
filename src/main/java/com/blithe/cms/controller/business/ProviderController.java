@@ -1,5 +1,6 @@
 package com.blithe.cms.controller.business;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -11,10 +12,7 @@ import com.blithe.cms.service.business.ProviderService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -67,8 +65,8 @@ public class ProviderController {
 
     @PostMapping("/deleteBatch")
     public R deleteProdiver(@RequestBody List<Map<String ,Object>> params){
+        Boolean flag = false;
         try {
-            Boolean flag = false;
             if(CollectionUtils.isNotEmpty(params)){
                 for (Map<String, Object> param : params) {
                     flag = providerService.deleteByMap(param);
@@ -81,6 +79,18 @@ public class ProviderController {
             }
         }catch (Exception e){
             throw new RbacException(e.getMessage());
+        }
+    }
+
+    @GetMapping("/loadSelectProviderName")
+    public R loadSelectProviderName(){
+        EntityWrapper entityWrapper = new EntityWrapper();
+        entityWrapper.eq("available",1);
+        List<Provider> list = providerService.selectList(entityWrapper);
+        if(CollectionUtil.isNotEmpty(list)){
+            return R.ok().put("data",list);
+        }else {
+            return R.error("无供应商列表");
         }
     }
 
