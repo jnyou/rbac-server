@@ -42,4 +42,24 @@ public class BusinessController {
         return "business/provider/provider";
     }
 
+
+    /**
+     *
+     * 商品进货
+     */
+    @RequestMapping("/bus/toInportManager")
+    public String toInportManager(){
+        return "business/inport/inportGoods";
+    }
+
+    /**
+     *
+     * 商品退货
+     */
+    @RequestMapping("/bus/toOutportManager")
+    public String toOutportManager(){
+        return "business/outport/outportGoods";
+    }
+
+
 }

@@ -1,11 +1,11 @@
 package com.blithe.cms.controller.business;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.blithe.cms.common.exception.R;
 import com.blithe.cms.common.exception.RbacException;
-import com.blithe.cms.pojo.business.Customer;
 import com.blithe.cms.pojo.business.Goods;
 import com.blithe.cms.pojo.business.Provider;
 import com.blithe.cms.service.business.GoodsService;
@@ -13,10 +13,7 @@ import com.blithe.cms.service.business.ProviderService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -109,6 +106,21 @@ public class GoodsController {
             throw new RbacException(e.getMessage());
         }
     }
+
+
+    @GetMapping("/loadAllGoodsName")
+    public R loadAllGoodsName(){
+        EntityWrapper<Goods> entityWrapper = new EntityWrapper<Goods>();
+        entityWrapper.eq("available",1);
+        List<Goods> list = goodsService.selectList(entityWrapper);
+        if(CollectionUtil.isNotEmpty(list)){
+            return R.ok().put("data",list);
+        }else {
+            return R.error("无商品列表");
+        }
+    }
+
+
 
 
 
