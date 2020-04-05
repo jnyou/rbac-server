@@ -39,23 +39,6 @@ public class OutPortGoodsController {
     @Autowired
     private GoodsService goodsService;
 
-    /**
-     * 退货
-     * @param id
-     * @param number
-     * @param remark
-     * @return
-     */
-    @RequestMapping("/OutportConfirm")
-    public R OutportConfirm(Integer id,Integer number,String remark){
-        try {
-            outportService.addOutPort(id,number,remark);
-        }catch (Exception e){
-            e.printStackTrace();
-            return R.error();
-        }
-        return R.ok();
-    }
 
     @RequestMapping("/list")
     public R list (Outport outport){
@@ -82,6 +65,25 @@ public class OutPortGoodsController {
             }
         }
         return R.ok().put("data",records).put("count",page.getTotal());
+    }
+
+
+    /**
+     * 退货
+     * @param id
+     * @param number
+     * @param remark
+     * @return
+     */
+    @RequestMapping("/outportConfirm")
+    public R OutportConfirm(Integer id,Integer number,String remark){
+        try {
+            outportService.addOutPort(id,number,remark);
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error();
+        }
+        return R.ok();
     }
 
 }

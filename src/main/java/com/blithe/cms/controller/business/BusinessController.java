@@ -61,5 +61,23 @@ public class BusinessController {
         return "business/outport/outportGoods";
     }
 
+    /**
+     *
+     * 商品销售
+     */
+    @RequestMapping("/bus/toSalesManager")
+    public String toSalesManager(){
+        return "business/sales/salesGoods";
+    }
+
+    /**
+     *
+     * 销售退货查询
+     */
+    @RequestMapping("/bus/toSalesBackManager")
+    public String toSalesBackManager(){
+        return "business/salesBack/salesBackGoods";
+    }
+
 
 }

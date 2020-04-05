@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>商品进货管理</title>
+    <title>商品销售管理</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
@@ -25,10 +25,10 @@
     <form action="" method="post" id="searchFrm" lay-filter="searchFrm" class="layui-form layui-form-pane">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">供应商</label>
+                <label class="layui-form-label">顾客名称</label>
                 <div class="layui-input-inline">
-                    <select name="providerid" id="search_providerid" lay-filter="search_providerid">
-                        <option value="0">请选择供应商</option>
+                    <select name="customerid" id="search_customerid">
+                        <option value="0">请选择顾客名称</option>
                     </select>
                 </div>
             </div>
@@ -41,9 +41,14 @@
                 </div>
             </div>
 			<div class="layui-inline">
-				<label class="layui-form-label">备注</label>
+				<label class="layui-form-label">支付方式</label>
 				<div class="layui-input-inline">
-					<input type="text" name="remark" autocomplete="off" class="layui-input">
+                    <select name="paytype">
+                        <option value="">请选择支付方式</option>
+                        <option value="微信">微信</option>
+                        <option value="支付宝">支付宝</option>
+                        <option value="信用卡">银联</option>
+                    </select>
 				</div>
 			</div>
         </div>
@@ -84,14 +89,14 @@
 
 <!-- 数据表格开始 -->
 <div>
-    <table class="layui-hide" id="inportTable" lay-filter="inportTable"></table>
-    <div id="inportToolBar" style="display: none;">
+    <table class="layui-hide" id="salesTable" lay-filter="salesTable"></table>
+    <div id="salesToolBar" style="display: none;">
         <button type="button" lay-event="add" class="layui-btn layui-btn-sm"><span
-                class="layui-icon layui-icon-add-1"></span>添加商品进货
+                class="layui-icon layui-icon-add-1"></span>添加商品销售
         </button>
     </div>
 
-    <div id="inportRowBar" style="display: none;">
+    <div id="salesRowBar" style="display: none;">
         <button type="button" lay-event="update" class="layui-btn layui-btn-sm"><span
                 class="layui-icon layui-icon-edit"></span>更新
         </button>
@@ -99,7 +104,7 @@
                 class="layui-icon layui-icon-delete"></span>删除
         </button>
         <button type="button" lay-event="back" class="layui-btn layui-btn-sm"><span
-                class="layui-icon layui-icon-edit"></span>退货
+                class="layui-icon layui-icon-edit"></span>销售退货
         </button>
     </div>
 </div>
@@ -111,10 +116,10 @@
     <form action="" method="post" class="layui-form layui-form-pane" id="dataFrm" lay-filter="dataFrm">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">供应商</label>
+                <label class="layui-form-label">商品销售</label>
                 <div class="layui-input-inline">
-                    <select name="providerid" id="providerid" lay-filter="providerid">
-                        <option value="0">请选择供应商</option>
+                    <select name="customerid" id="customerid">
+                        <option value="0">请选择商品销售</option>
                     </select>
                     <div class="mydiv" title="不可修改"
                          style="position:absolute;width:100%;height:100%;left:0px;top:0px;background:#fff;opacity:0;filter:alpha(opacity=0)"></div>
@@ -132,7 +137,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">进货数量</label>
+                    <label class="layui-form-label">销售数量</label>
                     <div class="layui-input-inline">
                         <input type="hidden" name="id">
                         <input type="text" class="layui-input" name="number" lay-verify="required|number"
@@ -140,9 +145,9 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">进货价格</label>
+                    <label class="layui-form-label">销售价格</label>
                     <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="inportprice" lay-verify="required|number"
+                        <input type="text" class="layui-input" name="saleprice" lay-verify="required|number"
                                placeholder="请输入商品进货规格">
                     </div>
                 </div>
@@ -156,7 +161,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">进货备注</label>
+                <label class="layui-form-label">销售备注</label>
                 <div class="layui-input-block">
                     <textarea name="remark" class="layui-textarea"></textarea>
                 </div>
@@ -232,23 +237,24 @@
 
         //加载 数据
         tableIns = table.render({
-            elem: '#inportTable'
-            , url: '/inport/list'
-            , toolbar: '#inportToolBar' //开启头部工具栏，并为其绑定左侧模板
+            elem: '#salesTable'
+            , url: '/sales/list'
+            , toolbar: '#salesToolBar' //开启头部工具栏，并为其绑定左侧模板
             , title: '商品进货数据表'
             , height: 'full-250'
             , page: true
             , cols: [ [
-                {field: 'id', title: '进货ID', align: 'center', width: '80'}
-                , {field: 'providername', title: '供应商', align: 'center', width: '150'}
+                {field: 'id', title: '销售ID', align: 'center', width: '80'}
+                , {field: 'customername', title: '顾客名称', align: 'center', width: '150'}
                 , {field: 'goodsname', title: '商品名称', align: 'center', width: '150'}
                 , {field: 'size', title: '商品规格', align: 'center', width: '150'}
-                , {field: 'inporttime', title: '进货时间', align: 'center', width: '180'}
-                , {field: 'number', title: '进货数量', align: 'center', width: '100'}
-                , {field: 'inportprice', title: '进货价格', align: 'center', width: '100'}
+                , {field: 'paytype', title: '支付方式', align: 'center', width: '150'}
+                , {field: 'salestime', title: '销售时间', align: 'center', width: '180'}
+                , {field: 'number', title: '销售数量', align: 'center', width: '100'}
+                , {field: 'saleprice', title: '销售价格', align: 'center', width: '100'}
                 , {field: 'remark', title: '备注', align: 'center', width: '150'}
                 , {field: 'operateperson', title: '操作员', align: 'center', width: '120'}
-                , {fixed: 'right', title: '操作', toolbar: '#inportRowBar', align: 'center', width: '250'}
+                , {fixed: 'right', title: '操作', toolbar: '#salesRowBar', align: 'center', width: '280'}
             ] ]
             , done: function (res, curr, count) { //处理删除某一页最后一条数据的BUG
                 if (res.data.length == 0 && curr != 1) {
@@ -261,45 +267,38 @@
             }
         });
 
+        initCustomerAndGoodsSelect();
 
-        //监听搜索的供应商下拉框的改变事件
-        form.on('select(search_providerid)', function (data) {
-            var providerid = data.value;
-            initSearchGoodsSelect(providerid);
-        });
-
-        //根据供应商id加载商品下拉列表
-        function initSearchGoodsSelect(providerid, goodsid) {
-            $.get("/inport/loadGoodsByProviderId", {providerid: providerid}, function (res) {
-                var data = res.data;
-                var html = '<option value="0">请选择商品</option>'
-                $.each(data, function (index, item) {
-                    html += '<option value="' + item.id + '">' + item.goodsname + '-' + item.size + '[' + item.providername + ']</option>'
-                });
-                $('#search_goodsid').html(html);
-                //如果goodsid有值就反选
-                if (goodsid != undefined) {
-                    $('#search_goodsid').val(goodsid);
+        // 加载商品顾客名称和商品名称下拉列表
+        function initCustomerAndGoodsSelect() {
+            //加载查询条件商品销售名称的下拉列表
+            $.get("/sales/loadSelectSalesName", function (res) {
+                var html = '<option value="0">请选择顾客名称</option>'
+                if(0 != res.data.length){
+                    $.each(res.data, function (index, item) {
+                        html += '<option value="' + item.id + '">' + item.customername + '</option>'
+                    });
+                    $("#search_customerid").html(html);
+                    $("#customerid").html(html);
+                    form.render("select");
+                }else {
+                    layer.msg(res.msg);
+                    return false;
                 }
-                form.render("select");
             });
-        }
 
-		initProviderSelect();
-
-        // 加载供应商下拉列表
-        function initProviderSelect(providerid) {
-            //加载查询条件供应商的下拉列表
-            $.get("/provider/loadSelectProviderName", function (res) {
-                var html = '<option value="0">请选择供应商</option>'
-                $.each(res.data, function (index, item) {
-                    html += '<option value="' + item.id + '">' + item.providername + '</option>'
-                });
-                $("#search_providerid").html(html);
-				$("#providerid").html(html);
-				if(providerid!=undefined){
-					$("#providerid").val(providerid);
-				}
+            //加载查询条件商品名称的下拉列表
+            $.get("/goods/loadAllGoodsName", function (res) {
+                var html = '<option value="0">请选择商品</option>'
+                if(0 != res.data.length){
+                    $.each(res.data, function (index, item) {
+                        html += '<option value="' + item.id + '">' + item.goodsname + '-' + item.size + '</option>'
+                    });
+                } else {
+                    layer.msg(res.msg);
+                }
+                $("#search_goodsid").html(html);
+                $("#goodsid").html(html);
                 form.render("select");
             });
         }
@@ -317,7 +316,7 @@
         });
 
         //监听工具条的事件
-        table.on("toolbar(inportTable)", function (obj) {
+        table.on("toolbar(salesTable)", function (obj) {
             var data = obj.data; //获得当前行数据
             var layEven = obj.event;
             if (layEven === 'add') {
@@ -326,14 +325,14 @@
         });
 
         //监听行工具条的事件
-        table.on("tool(inportTable)", function (obj) {
+        table.on("tool(salesTable)", function (obj) {
             var data = obj.data; //获得当前行数据
             switch (obj.event) {
                 case 'update':
                     commonOpenWindowsAddAndUpdate(data);
                     break;
                 case 'delete':
-                    deleteInport(data);
+                    deleteSales(data);
                     break;
                 case 'back':
                     back(data);
@@ -343,13 +342,13 @@
         });
 
         var mainIndex;
-        var url = '/inport/inportSaveOrUpdate';
+        var url = '/sales/salesSaveOrUpdate';
 
         // 添加编辑公共弹窗
         function commonOpenWindowsAddAndUpdate(data) {
             mainIndex = layer.open({
                 type: 1
-                , title: data == null ? '添加商品进货' : '编辑商品进货'
+                , title: data == null ? '添加商品销售' : '编辑商品销售'
                 , content: $('#addOrUpdateDiv')
                 , area: ['800px', '600px']
                 , shade: 0.8
@@ -360,45 +359,20 @@
                     if (data == null) {
                         flag=false;
 						$(".mydiv").hide();
-						$("#goodsid").html('<option value="0">请选择商品</option>')
-						initProviderSelect();
+						// $("#goodsid").html('<option value="0">请选择商品</option>')
+                        initCustomerAndGoodsSelect();
                     } else {
                         flag=true;
                         //装载新的数据
                         form.val("dataFrm", data);
-						$("#goodsid").html('<option value="' + data.goodsid + '">' + data.goodsname + '-' + data.size + '[' + data.providername + ']</option>');
-						//禁用供应商和商品的下拉框
+						// $("#goodsid").html('<option value="' + data.goodsid + '">' + data.goodsname + '-' + data.size + '[' + data.providername + ']</option>');
+						//禁用商品销售和商品的下拉框
 						$(".mydiv").show();
                     }
                 }
             })
         }
 
-		//监听添加页面的供应商下拉框的改变事件
-		form.on('select(providerid)', function(data){
-		 	var providerid=data.value;
-		 	initGoodsSelect(providerid);
-		});
-
-		// 加载商品下拉列表
-		function initGoodsSelect(providerid,goodsid){
-			$.get("/inport/loadGoodsByProviderId", {providerid: providerid}, function (res) {
-				var html = '<option value="0">请选择商品</option>'
-				if(0 != res.data.length){
-					$.each(res.data, function (index, item) {
-						html += '<option value="' + item.id + '">' + item.goodsname + '-' + item.size + '[' + item.providername + ']</option>'
-					});
-				} else {
-					layer.msg(res.msg);
-				}
-				$("#goodsid").html(html);
-				//如果goodsid有值就反选
-				if(goodsid!=undefined){
-					$("#goodsid").val(goodsid);
-				}
-				form.render("select");
-			});
-		}
 
 		form.on("submit(doSubmit)", function (data) {
 			var requestData = data.field;
@@ -407,7 +381,7 @@
             }
 			// console.log(data.field);
 			if(requestData.providerid == "0"){
-				layer.msg("请选择供应商");
+				layer.msg("请选择商品销售");
 				return false;
 			}
 			if(requestData.goodsid == "0"){
@@ -429,9 +403,9 @@
 		})
 
         //删除
-        function deleteInport(data) {
+        function deleteSales(data) {
             layer.confirm('你确定要删除这个商品进货吗?', {icon: 3, title: '提示'}, function (index) {
-                $.post("/inport/delete", {id: data.id}, function (result) {
+                $.post("/sales/delete", {id: data.id}, function (result) {
                     if (result.code != 0) {
                         layer.msg("服务器请求失败！");
                         return false;
@@ -451,7 +425,7 @@
                 type: 1,
                 content: $("#backGoodsDiv"),
                 area: ['800px', '500px'],
-                title: '商品退货',
+                title: '商品销售退货',
                 success: function () {
                     $("#dataBackFrm")[0].reset();
                     //装载新的数据
@@ -472,7 +446,7 @@
 
         //退货提交
         form.on("submit(doBackSubmit)", function (data) {
-            $.post("/outport/outportConfirm", data.field, function (res) {
+            $.post("/salesback/salesBackConfirm", data.field, function (res) {
                 if (res.code != 0) {
                     layer.msg("服务器请求失败！");
                     return false;
