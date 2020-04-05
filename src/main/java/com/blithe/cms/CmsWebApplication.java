@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  **/
 @EnableCaching
 @MapperScan(basePackages = {"com.blithe.cms.mapper"})
-@SpringBootApplication()
+@SpringBootApplication
 @EnableTransactionManagement
 public class CmsWebApplication {
     public static void main(String[] args) {
