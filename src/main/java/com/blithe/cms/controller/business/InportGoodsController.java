@@ -54,6 +54,7 @@ public class InportGoodsController {
         wrapper.eq(null!=inport.getGoodsid()&&inport.getGoodsid()!=0,"goodsid",inport.getGoodsid());
         wrapper.ge(inport.getStartTime()!=null,"inporttime",inport.getStartTime());
         wrapper.le(inport.getEndTime()!=null,"inporttime",inport.getEndTime());
+        wrapper.like(StringUtils.isNotBlank(inport.getRemark()), "remark", inport.getRemark());
         inportService.selectPage(page,wrapper);
         List<Inport> records = page.getRecords();
         if(CollectionUtils.isNotEmpty(records)){

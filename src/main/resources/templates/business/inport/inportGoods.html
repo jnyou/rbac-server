@@ -472,11 +472,15 @@
 
         //退货提交
         form.on("submit(doBackSubmit)", function (data) {
-            $.post("/outport/addOutport", data.field, function (res) {
-                if (res.code == 200) {
+            $.post("/outport/OutportConfirm", data.field, function (res) {
+                if (res.code != 0) {
+                    layer.msg("服务器请求失败！");
+                    return false;
+                } else {
+                    layer.msg('退货成功', {icon: 1});
+                    //不刷新页面 留在当前
                     tableIns.reload();
                 }
-                layer.msg(res.msg);
                 layer.close(mainIndex);
             })
             return false;
