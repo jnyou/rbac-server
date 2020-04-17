@@ -29,9 +29,11 @@ public class SendSms {
     //产品域名,开发者无需替换
     static final String domain = "dysmsapi.aliyuncs.com";
 
-    private static String accessKeyId = "LTAI4FbdaDopPGJJgnEkYBqf";
+    // 可在我的阿里云中找到
+    private static String accessKeyId = "xxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
-    private static String accessSecret = "bhtz676pat2wJF5U6b0eiNRVNsy8Vp";
+    // 可在我的阿里云中找到
+    private static String accessSecret = "xxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
     // 短信签名【去阿里控制台配置】
     public static String SMS_SIGN = "叮咚网城";
