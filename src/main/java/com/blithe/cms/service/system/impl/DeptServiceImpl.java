@@ -8,6 +8,7 @@ import com.blithe.cms.config.redis.RedisCompoent;
 import com.blithe.cms.mapper.system.DeptMapper;
 import com.blithe.cms.pojo.system.Dept;
 import com.blithe.cms.service.system.DeptService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -34,7 +35,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 	private RedisCompoent redisCompoent;
 
 	@Override
-	@Cacheable(value = {"dept"},key = "'selectById' + #p0",sync=true)
+	@Cacheable(value = {"dept"},key = "#p0",sync=true)
 	public Dept selectById(Serializable id) {
 		return deptMapper.selectById(id);
 	}
@@ -55,8 +56,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 	 * @return
 	 */
 	@Override
-	@CachePut(value = {"dept"},key = "'updateById_' + #p0.id")
-	public boolean updateById(Dept dept) {
+	@CachePut(value = {"dept"},key = "#p0.id")
+	public Dept updateDeptById(Dept entity) {
 //		redisCompoent.remove("updateById_" + dept.getId());
 //		boolean editFlag = super.updateById(dept);
 //		try {
@@ -65,13 +66,25 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 //			e.printStackTrace();
 //		}
 //		redisCompoent.remove("updateById_" + dept.getId());
-		return super.updateById(dept);
+		Dept dept = new Dept();
+		super.updateById(entity);
+		BeanUtils.copyProperties(entity,dept);
+		return dept;
 	}
 
 	@Override
 	@CacheEvict(value = {"dept"},allEntries = true)
 	public boolean deleteById(Serializable id) {
 		return super.deleteById(id);
+	}
+
+	@Override
+	@CachePut(cacheNames = "dept",key = "#result.id")
+	public Dept saveDept(Dept entity) {
+		Dept dept = new Dept();
+		deptMapper.insert(entity);
+		BeanUtils.copyProperties(entity,dept);
+		return dept;
 	}
 
 	/**

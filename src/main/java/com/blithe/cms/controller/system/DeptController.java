@@ -91,9 +91,9 @@ public class DeptController {
         try {
             if(dept.getId() == null){
                 dept.setCreatetime(new Date());
-                this.deptService.insert(dept);
+                this.deptService.saveDept(dept);
             }else{
-                this.deptService.updateById(dept);
+                this.deptService.updateDeptById(dept);
             }
         }catch (Exception e){
             return R.error(e.getMessage());

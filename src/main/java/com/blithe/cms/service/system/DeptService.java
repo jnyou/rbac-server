@@ -1,6 +1,7 @@
 package com.blithe.cms.service.system;
 
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.IService;
 import com.blithe.cms.common.tools.DataGridView;
 import com.blithe.cms.pojo.system.Dept;
@@ -26,16 +27,15 @@ public interface DeptService extends IService<Dept> {
      * @param dept
      * @return
      */
-    @Override
-    boolean updateById(Dept dept);
+    Dept updateDeptById(Dept dept);
 
     /**
-     * 删除
-     * @param id
+     * 保存
+     * @param dept
      * @return
      */
-    @Override
-    boolean deleteById(Serializable id);
+    Dept saveDept(Dept dept);
+
 
     /**
      * 部门树
