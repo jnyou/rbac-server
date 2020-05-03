@@ -1,19 +1,20 @@
 # 开发环境配置
 server:
-  port: 8088
   servlet:
     session:
       timeout: 720m  # session超时时间为12小时，单位分钟
-
+  tomcat:
+    uri-encoding: utf-8  # tomcat的URI编码
+    max-threads: 800     # 最大线程数
+  port: 8080
 spring:
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss # 时间格式化
+    date-format: yyyy-MM-dd HH:mm:ss # 项目中后台返回给前台的时间格式化格式，如果想换成yyyy-MM-dd,可在时间类型的属性或者get()方法上添加注解jackson的@JsonFormat(pattern = "yyyy-MM-dd",timezone = "GTM+8")
     time-zone: Asia/Chongqing        # 时区设置
     # 启动热部署
     devtools:
       restart:
         enabled: false
-
   datasource: # 数据源
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 在spring boot 配置文件中datasource url 增加serverTimezone=UTC 参数，其中UTC是统一标准世界时间
@@ -31,14 +32,25 @@ spring:
       test-while-idle: true # 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。
       min-evictable-idle-time-millis: 360000 # 配置一个连接在池中最小生存的时间，单位是毫秒
       query-timeout: 60000 # 查询超时时间
-    type: com.alibaba.druid.pool.DruidDataSource # 类型
+      validation-query: select * from dual # 连接检查
+      stat-view-servlet:
+        enabled: true # 开启druid监控
+        login-username: admin
+        login-password: admin
+        allow:  # 白名单
+        deny:   # 黑名单
+        url-pattern: "/druid/*"
+    hikari:
+      read-only:
+  #    type: com.alibaba.druid.pool.DruidDataSource # 类型
+
 
 
   # thymeleaf模板配置
   # 在构建URL时可以预览查看名称的前缀。就是路径在哪
   thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
+    prefix: classpath:/templates/ #默认
+    suffix: .html  #默认
     encoding: UTF-8           # 模板的字符集
     servlet:
       content-type: text/html # 模板中内容的类型
@@ -56,7 +68,7 @@ spring:
       cache-null-values: false #是否缓存空值
   redis:
     port: 6379
-    host: localhost  # 127.0.0.1
+    host: 127.0.0.1  # 127.0.0.1
     password: 123456 # Redis 服务器连接密码（默认为空）
     lettuce:
       pool:
@@ -81,6 +93,11 @@ spring:
       max-file-size: 200MB
     # 最大支持请求大小
       max-request-size: 200MB
+  # 修改默认的静态寻址资源目录 多个使用逗号分隔  当资源文件有相同的文件名和类型时，顺序在前的优先级更高
+  resources:
+    static-locations: classpath:/static/,classpath:/templates/,classpath:/public/,file:${spring.servlet.multipart.location}
+  mvc:
+    date-format: yyyy-MM-dd  # 项目中前台传到后台时间类型格式化格式 在项目中只要使用了Date类型的都会转换成 yyyy-MM-dd格式，若想传递的是其他的类型，可在获取时间类型的参数前加上jackson的@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 
 
 mybatis-plus:
@@ -112,35 +129,34 @@ mybatis-plus:
   #控制台是否显示sql
   #mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 
+###########################################华丽的分割线（自定义yml配置）##########################################################
 
+# redis
+redis:
+  glob-expire: 1800  # 全局的过期时间
+  host-port: 127.0.0.1:6379
 
-    # 静态文件请求匹配方式
-    mvc:
-      static-path-pattern: /**
-    # 修改默认的静态寻址资源目录 多个使用逗号分隔
-    resources:
-      static-locations:
-        classpath:/static/,classpath:/templates/,classpath:/public/,file:${spring.servlet.multipart.location}
-
-
-#shiro的配置
-#shiro:
-#  hash-algorithm-name: md5
-#  hash-iterations: 2
-#  #放行页面
-#  anon-urls:
-#    - /login*
-#    - /login/login*
-#    - /static/**
-#  login-url: /index.html
-#  log-out-url: /login/logout*
-#  authc-ulrs:
-#    - /**
-
-
-
-
-
-
-
-
+# shiro的配置
+shiro:
+  conf:
+    hash-algorithm-name: md5 # 加密方式
+    hash-iterations: 2       # 散列次数
+    anon-urls: #放行页面
+      - /css/**
+      - /images/**
+      - /fonts/**
+      - /js/**
+      - /layui/**
+      - /plugins/**
+      - /druid/**
+      - /page/**
+      - /json/**
+      - /login*
+      - /login/login*
+      - /test*
+    login-url: /login           # 登陆页
+    log-out-url: /login/logout  # 登出页
+    success-url: /index         # 登陆成功页
+    unauthorized-url: /403      # 未授权界面
+    authc-urls:
+      - /**
