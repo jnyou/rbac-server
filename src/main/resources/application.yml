@@ -151,12 +151,13 @@ shiro:
       - /druid/**
       - /page/**
       - /json/**
-      - /login*
+#      - /login*
       - /login/login*
       - /test*
+      - /login/getCode*
     login-url: /login           # 登陆页
     log-out-url: /login/logout  # 登出页
     success-url: /index         # 登陆成功页
     unauthorized-url: /403      # 未授权界面
     authc-urls:
-      - /**
+      - /login*

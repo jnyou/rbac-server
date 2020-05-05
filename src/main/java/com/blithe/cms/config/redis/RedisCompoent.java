@@ -3,14 +3,13 @@ package com.blithe.cms.config.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,6 +130,52 @@ public class RedisCompoent {
                 .opsForValue();
         result = operations.get(key);
         return result;
+    }
+
+    /**
+     * 使用scan命令 查询某些前缀的key
+     * @param key
+     * @return
+     */
+    public Set<String> scan(String key){
+        Set<String> execute = (Set<String>) this.redisTemplate.execute(new RedisCallback<Set<String>>() {
+
+            @Override
+            public Set<String> doInRedis(RedisConnection connection) throws DataAccessException {
+
+                Set<String> binaryKeys = new HashSet<>();
+
+                Cursor<byte[]> cursor = connection.scan(new ScanOptions.ScanOptionsBuilder().match(key).count(1000).build());
+                while (cursor.hasNext()) {
+                    binaryKeys.add(new String(cursor.next()));
+                }
+                return binaryKeys;
+            }
+        });
+        return execute;
+    }
+
+    /**
+     * 使用scan命令 查询某些前缀的key 有多少个
+     * 用来获取当前session数量,也就是在线用户
+     * @param key
+     * @return
+     */
+    public Long scanSize(String key){
+        long dbSize = (long) this.redisTemplate.execute(new RedisCallback<Long>() {
+
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                long count = 0L;
+                Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions().match(key).count(1000).build());
+                while (cursor.hasNext()) {
+                    cursor.next();
+                    count++;
+                }
+                return count;
+            }
+        });
+        return dbSize;
     }
 
     /**

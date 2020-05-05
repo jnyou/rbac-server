@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="loginHtml">
+<html class="loginHtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<title>登录--CMS后台管理</title>
@@ -12,6 +12,16 @@
 	<link rel="icon" href="/favicon.ico">
 	<link rel="stylesheet" href="/layui/css/layui.css" media="all" />
 	<link rel="stylesheet" href="/css/public.css" media="all" />
+	<style>
+		.layui-form-checkbox i{
+			width: 22px;
+			height: 22px;
+			border-left: 1px solid #d2d2d2;
+		}
+		.loginBody form.layui-form {
+			height: 360px;
+		}
+	</style>
 </head>
 <body class="loginBody">
 	<form class="layui-form">
@@ -25,13 +35,17 @@
 			<input type="password" placeholder="请输入密码" autocomplete="off" id="password" class="layui-input" lay-verify="required">
 		</div>
 		<div class="layui-form-item input-item" id="imgCode">
-			<label for="code">验证码</label>
+			<label for="verifyCode">验证码</label>
 			<input type="text" placeholder="请输入验证码" autocomplete="off" id="code" class="layui-input">
-			<img src="/images/code.jpg">
+			<img id="verifyCode" src="/login/getCode" style="margin-left: 16px"><br>
+			<a href="#" style="color: blue" onclick="refreshCode()">看不清？换一个</a>
 		</div>
+		<input type="checkbox" name="rememberMe" id="rememberMe">Remember Me?
 		<div class="layui-form-item">
 			<button class="layui-btn layui-block" lay-filter="login" lay-submit>登录</button>
 		</div>
+		<!-- 国际化获取 -->
+<!--		<div><span th:text="#{name}"></span></div>-->
 <!--	QQ 微信 微博 第三方工具登陆	-->
 <!--		<div class="layui-form-item layui-row">-->
 <!--			<a href="javascript:;" class="seraph icon-qq layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4"></a>-->
@@ -63,7 +77,7 @@
 					type: "POST",
 					url: "/login/login",
                     // 参数也可以直接 data.field获取
-					data: {username:$("#userName").val(), password:$("#password").val() , code:$("#code").val()},
+					data: {username:$("#userName").val(), password:$("#password").val() , code:$("#code").val(), rememberMe: $('#rememberMe')[0].checked },
 					dataType: "json",
 					success: function(data){
                         //设置登录按钮 恢复可点击   在前端防止 重复点击
@@ -98,6 +112,9 @@
 			})
 		})
 
+		function refreshCode() {
+			document.getElementById("verifyCode").setAttribute("src","/login/getCode");
+		}
 	</script>
 </body>
 </html>

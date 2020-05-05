@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -36,6 +38,7 @@ import java.util.Map;
 @Configuration
 //继承CachingConfigurerSupport，为了自定义生成KEY的策略。可以不继承。
 public class RedisConfiguration extends CachingConfigurerSupport {
+
     /**
      * SpringBoot 2.X 缓存管理器配置
      *
@@ -43,7 +46,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
      * @return
      */
     @Bean
-    public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         // 使用json方式序列化，在实体类中可以不进行序列化了
         RedisSerializer<String> redisSerializer = new StringRedisSerializer();
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
@@ -52,29 +55,36 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
-//        CacheKeyPrefix keyPrefix = new CacheKeyPrefix() {
-//            @Override
-//            public String compute(String cacheName) {
-//                return cacheName + "::";
-//            }
-//        };
+        CacheKeyPrefix keyPrefix = new CacheKeyPrefix() {
+            @Override
+            public String compute(String cacheName) {
+                return cacheName + "::";
+            }
+        };
 
         // 生成一个默认配置，通过config对象即可对缓存进行自定义配置   配置序列化（解决乱码的问题）
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(0)) // 默认缓存时间
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer)) // 设置key的序列化方式
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer)) // 设置value的序列化方式
+                // 默认缓存时间
+                .entryTtl(Duration.ofMinutes(0))
+                // 设置key的序列化方式
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
+                // 设置value的序列化方式
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
                 .disableCachingNullValues(); // 不缓存null值
 
-        // 对每个缓存空间应用不同的配置
-        Map<String, RedisCacheConfiguration> configMap = new HashMap<>();
-        configMap.put("my-redis-cache1", config.entryTtl(Duration.ofHours(30L)));   // my-redis-cache1过期时间为30分钟
-        configMap.put("my-redis-cache2", config.entryTtl(Duration.ofSeconds(120))); // my-redis-cache2过期时间120s
+        // 对每个缓存空间应用不同的配置 自定义的缓存配置
+        Map<String, RedisCacheConfiguration> configMap = new HashMap<>(124);
+        // my-redis-cache1过期时间为30分钟
+        configMap.put("my-redis-cache1", config.entryTtl(Duration.ofHours(30L)));
+        // my-redis-cache2过期时间120s
+        configMap.put("my-redis-cache2", config.entryTtl(Duration.ofSeconds(120)));
 
         // 使用自定义的缓存配置初始化一个cacheManager
         return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(config) // 默认缓存
-                .withInitialCacheConfigurations(configMap) // 特殊缓存
+                // 默认缓存
+                .cacheDefaults(config)
+                // 特殊缓存
+                .withInitialCacheConfigurations(configMap)
                 .transactionAware() // 事务
                 .build();
 
@@ -135,7 +145,9 @@ public class RedisConfiguration extends CachingConfigurerSupport {
      * @param redisConnectionFactory
      * @return
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Bean
+    @Primary
     public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);

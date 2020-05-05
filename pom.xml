@@ -8,6 +8,7 @@
     <artifactId>rbac-server-master</artifactId>
     <version>1.0-SNAPSHOT</version>
     <description>基于spring boot开发项目</description>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -29,8 +30,9 @@
         <commons-lang3-version>3.4</commons-lang3-version>
         <commons-io-version>2.5</commons-io-version>
         <commons-configuration-version>1.10</commons-configuration-version>
-        <fastjson-version>1.2.30</fastjson-version>
+        <fastjson-version>1.2.68</fastjson-version>
         <shiro-version>1.4.0</shiro-version>
+        <shiro-redis-version>3.2.3</shiro-redis-version>
         <thymeleafshiro-version>2.0.0</thymeleafshiro-version>
         <poi-version>4.0.1</poi-version>
         <poi-ooxml>4.0.1</poi-ooxml>
@@ -69,6 +71,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- kaptcha 验证码 -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>2.3.2</version>
+        </dependency>
         <!-- log4j2 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -133,7 +141,7 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid-version}</version>
         </dependency>
-        <!--shiro配置-->
+        <!--shiro配置 start-->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
@@ -144,6 +152,13 @@
             <artifactId>shiro-spring</artifactId>
             <version>${shiro-version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.crazycake/shiro-redis -->
+        <dependency>
+            <groupId>org.crazycake</groupId>
+            <artifactId>shiro-redis</artifactId>
+            <version>${shiro-redis-version}</version>
+        </dependency>
+        <!--shiro配置 end-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -236,6 +251,8 @@
                     <!-- 指定该Main Class为全局的唯一入口 -->
                     <mainClass>com.blithe.cms.CmsWebApplication</mainClass>
                     <layout>ZIP</layout>
+                    <!-- 默认为true。在Linux中运行无法解压，改为false就可以解压jar包 -->
+                    <executable>false</executable>
                 </configuration>
                 <executions>
                     <execution>
