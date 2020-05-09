@@ -155,6 +155,7 @@ shiro:
       - /login/login*
       - /test*
       - /login/getCode*
+      - /login/kickout*
     login-url: /login           # 登陆页
     log-out-url: /login/logout  # 登出页
     success-url: /index         # 登陆成功页

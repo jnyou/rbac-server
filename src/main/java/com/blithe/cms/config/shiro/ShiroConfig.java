@@ -2,6 +2,7 @@ package com.blithe.cms.config.shiro;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.blithe.cms.config.redis.RedisCompoent;
+import com.blithe.cms.filter.KickoutSessionControlFilter;
 import com.blithe.cms.filter.LoginFormAuthenticationFilter;
 import com.blithe.cms.filter.RememberMeFilter;
 import com.blithe.cms.listener.IsMeSessionListener;
@@ -119,7 +120,7 @@ public class ShiroConfig {
         /**
          * TODO 记住我功能
          */
-        securityManager.setRememberMeManager(rememberMeManager());
+//        securityManager.setRememberMeManager(rememberMeManager());
         return securityManager;
     }
 
@@ -483,19 +484,19 @@ public class ShiroConfig {
      * 并发登录控制(限制同一账号登录同时登录人数控制)
      * @return
      */
-//    @Bean
-//    public KickoutSessionControlFilter kickoutSessionControlFilter(){
-//        KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
-//        //用于根据会话ID，获取会话进行踢出操作的；
-//        kickoutSessionControlFilter.setSessionManager(sessionManager());
-//        //使用cacheManager获取相应的cache来缓存用户登录的会话；用于保存用户—会话之间的关系的；
-//        kickoutSessionControlFilter.setCacheManager(redisCacheManager());
-//        //是否踢出后来登录的，默认是false；即后者登录的用户踢出前者登录的用户；
-//        kickoutSessionControlFilter.setKickoutAfter(false);
-//        //同一个用户最大的会话数，默认1；比如2的意思是同一个用户允许最多同时两个人登录；
-//        kickoutSessionControlFilter.setMaxSession(1);
-//        //被踢出后重定向到的地址；
-//        kickoutSessionControlFilter.setKickoutUrl("/login?kickout=1");
-//        return kickoutSessionControlFilter;
-//    }
+    @Bean
+    public KickoutSessionControlFilter kickoutSessionControlFilter(){
+        KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
+        //用于根据会话ID，获取会话进行踢出操作的；
+        kickoutSessionControlFilter.setSessionManager(sessionManager());
+        //使用cacheManager获取相应的cache来缓存用户登录的会话；用于保存用户—会话之间的关系的；
+        kickoutSessionControlFilter.setCacheManager(cacheManagers());
+        //是否踢出后来登录的，默认是false；即后者登录的用户踢出前者登录的用户；
+        kickoutSessionControlFilter.setKickoutAfter(false);
+        //同一个用户最大的会话数，默认1；比如2的意思是同一个用户允许最多同时两个人登录；
+        kickoutSessionControlFilter.setMaxSession(1);
+        //被踢出后重定向到的地址；
+        kickoutSessionControlFilter.setKickoutUrl("/login/kickout?kickout=1");
+        return kickoutSessionControlFilter;
+    }
 }

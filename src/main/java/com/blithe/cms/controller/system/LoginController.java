@@ -3,6 +3,7 @@ package com.blithe.cms.controller.system;
 import com.blithe.cms.common.exception.R;
 import com.blithe.cms.common.tools.HttpContextUtils;
 import com.blithe.cms.common.tools.IpUtil;
+import com.blithe.cms.log.SysLog;
 import com.blithe.cms.pojo.system.Loginfo;
 import com.blithe.cms.pojo.system.SysUser;
 import com.blithe.cms.service.system.LoginfoService;
@@ -72,6 +73,7 @@ public class LoginController {
     /**
      * check code and pwd
      */
+    @SysLog("用户登陆认证")
     @PostMapping("login")
     public R checkAccount(@RequestParam("username") String name, @RequestParam("password") String pwd, @RequestParam("code") String code,
                             @RequestParam("rememberMe") boolean rememberMe){
@@ -88,7 +90,7 @@ public class LoginController {
 
         try {
             //主体提交登录请求到SecurityManager
-            token.setRememberMe(rememberMe);
+//            token.setRememberMe(true);
             // 登陆成功 调用login方法
             currentUser.login(token);
 //        }catch (IncorrectCredentialsException e){
@@ -134,11 +136,10 @@ public class LoginController {
         byte[] verByte = null;
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
         try {
-            Subject currentUser = SecurityUtils.getSubject();
-            Session session = currentUser.getSession();
-            //生产验证码字符串并保存到session中
+            //生产验证码字符串并保存到shiro的session中
             String createText = defaultKaptcha.createText();
-            session.setAttribute(SHIRO_VERIFY_SESSION,createText);
+            SecurityUtils.getSubject().getSession().setAttribute(SHIRO_VERIFY_SESSION,createText);
+//            HttpContextUtils.getHttpServletRequest().getSession().setAttribute(SHIRO_VERIFY_SESSION,createText);
             //使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
             BufferedImage challenge = defaultKaptcha.createImage(createText);
             ImageIO.write(challenge,"jpg",jpegOutputStream);
@@ -165,7 +166,7 @@ public class LoginController {
      */
     @RequestMapping(value = "/kickout", method = RequestMethod.GET)
     public String kickOut() {
-        return "kickout";
+        return ERROR_CODE_URL;
     }
 
 }
