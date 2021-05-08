@@ -31,7 +31,7 @@
         <commons-io-version>2.5</commons-io-version>
         <commons-configuration-version>1.10</commons-configuration-version>
         <fastjson-version>1.2.68</fastjson-version>
-        <shiro-version>1.4.0</shiro-version>
+        <shiro-version>1.6.0</shiro-version>
         <shiro-redis-version>3.2.3</shiro-redis-version>
         <thymeleafshiro-version>2.0.0</thymeleafshiro-version>
         <poi-version>4.0.1</poi-version>
