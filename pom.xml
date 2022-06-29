@@ -34,7 +34,7 @@
         <shiro-version>1.4.0</shiro-version>
         <shiro-redis-version>3.2.3</shiro-redis-version>
         <thymeleafshiro-version>2.0.0</thymeleafshiro-version>
-        <poi-version>4.0.1</poi-version>
+        <poi-version>4.1.1</poi-version>
         <poi-ooxml>4.0.1</poi-ooxml>
         <aliyun-java-sdk-version>4.4.6</aliyun-java-sdk-version>
         <aliyun-java-sdk-dysmsapi-version>2.1.0</aliyun-java-sdk-dysmsapi-version>
